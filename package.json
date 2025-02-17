@@ -1,0 +1,27 @@
+{
+  "name": "roommingle-2",
+  "version": "1.0.0",
+  "description": "This directory is for a website project reelating to matching students at UMass amherst with viable roommates. We are working on a website that will be integrated using a MERN stack, 1. Set up Node environment with express.js 2. Install relevant packages into node environment 3. Set up a database with MongoDB 4. Set up API routes 5. Set up frontend using React 6. Connect front end and back end 7. Deploy",
+  "main": "db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YP610/Roommingle.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YP610/Roommingle/issues"
+  },
+  "homepage": "https://github.com/YP610/Roommingle#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.10.1",
+    "package-name": "^0.1.0"
+  }
+}
