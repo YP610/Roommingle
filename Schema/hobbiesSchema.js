@@ -2,6 +2,11 @@ const Schema=mongoose.Schema;
 const mongoose=require("mongoose");
 
 const HobbiesSchema=new mongoose.Schema({
+    user: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'User', // Reference to the User model
+        required: true
+    },
     hobbies:{type:String, required:false},
     
 },{ timestamps:true});
