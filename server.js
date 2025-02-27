@@ -5,7 +5,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 //attaches env variables to processed env objects
 require('dotenv').config();
-//const dbURI=("")
+
+//connect to mongodb
+const dbURI='mongodb+srv://pranav:Pg@cluster0.dcxpq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+mongoose.connect(dbURI);
 
 //express app
 const app = express();
