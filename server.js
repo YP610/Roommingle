@@ -12,6 +12,8 @@ const app = express();
 const PORT = process.env.PORT;
 
 //middleware
+app.use(express.json())
+
 app.use((req, res, next) => {
     console.log(req.path, req.method)
     next()
@@ -19,9 +21,10 @@ app.use((req, res, next) => {
 // routes
 app.get("/", (req, res) => {
     res.send("Hello, Yash!")
-});//just a test
+});//just a test (delete later)
 
-app.use(studentRoutes)
+// uses all the request handlers imported from students.js (must include /api/students route)
+app.use('/api/students', studentRoutes)
 
 
 
