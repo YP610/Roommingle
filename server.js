@@ -1,12 +1,12 @@
 //imports required packages that we installed through the terminal
 const express = require("express");
-const studentRoutes = require("./routes/students") //requires API routes
+const studentRoutes = require("./students") //requires API routes
 const mongoose = require('mongoose');
 const cors = require('cors');
 
 //express app
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 1000;
 
 //attaches env variables to processed env objects
 require('dotenv').config();
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 })
 // routes
 app.get("/", (req, res) => {
-    res.send("Hello, Yash!")
+    res.send("Hello, Mike!")
 });//just a test (delete later)
 
 // uses all the request handlers imported from students.js (must include /api/students route)
@@ -37,9 +37,9 @@ mongoose.connect(dbURI)
         });
     })
     .catch((error) => {
-        console.log(error)
-        res.send("Hello")
+        console.error('Error connecting to db', error);
     })
+
 
 
 

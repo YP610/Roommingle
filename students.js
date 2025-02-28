@@ -1,5 +1,5 @@
 const express = require('express')
-const User=require('../Schema/userSchema')
+const User=require('./Schema/userSchema')
 const router = express.Router() //creates router
 
 //adds all request handlers to router
