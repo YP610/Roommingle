@@ -1,4 +1,6 @@
 const express = require('express')
+const requireAuth = require('../MiddleWare/authMiddleware'); // Import middleware
+
 const {
     getContacts,
     getContact,
@@ -9,7 +11,7 @@ const {
 const router = express.Router() //creates router
 
 //adds all request handlers to router
-
+router.use(requireAuth);
 // GET all users
 router.get('/', getContacts)
 

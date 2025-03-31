@@ -10,7 +10,7 @@ const {
 const router = express.Router() //creates router
 
 //adds all request handlers to router
-route.use(requireAuth)
+router.use(requireAuth)
 // GET all Living Conditions
 router.get('/', getLivingConditions)
 

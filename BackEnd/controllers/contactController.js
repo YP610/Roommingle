@@ -1,4 +1,4 @@
-const Contact=require('..models/contactSchema')
+const Contact=require('../models/contactSchema')
 const mongoose = require('mongoose')
 
 //get all contacts

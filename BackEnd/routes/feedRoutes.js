@@ -1,4 +1,6 @@
 const express = require('express')
+const requireAuth = require('../MiddleWare/authMiddleware'); // Import middleware
+
 const {
     getFeeds,
     getFeed,
@@ -6,7 +8,6 @@ const {
     deleteFeed,
     updateFeed
 } = require("../controllers/feedController")
-const { getFeed } = require('../controllers/feedController')
 const router = express.Router() //creates router
 
 //adds all request handlers to router

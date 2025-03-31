@@ -1,5 +1,5 @@
-const Schema=mongoose.Schema;
 const mongoose=require("mongoose");
+const Schema=mongoose.Schema;
 
 const LivingConditionsSchema=new mongoose.Schema({
     user: { 
@@ -9,7 +9,7 @@ const LivingConditionsSchema=new mongoose.Schema({
     },
     sleep_attitude:{type:String, required:true},
     major:{type:String, required:true},
-    cleaniness_score:{type:int, required:true},
+    cleaniness_score:{type:Number, required:true},
 },{ timestamps:true});
 
 const livingConditions = mongoose.model("LivingConditions", LivingConditionsSchema);

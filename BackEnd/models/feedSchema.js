@@ -1,5 +1,6 @@
-const Schema=mongoose.Schema;
 const mongoose=require("mongoose");
+const Schema=mongoose.Schema;
+
 const feedSchema=new mongoose.Schema({
     user: { 
         type: Schema.Types.ObjectId, 
@@ -13,4 +14,4 @@ const feedSchema=new mongoose.Schema({
 },{ timestamps:true});
 
 const feed = mongoose.model("Feed", feedSchema);
-module.exports= faceCard;
+module.exports= feed;

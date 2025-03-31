@@ -2,7 +2,6 @@
 require('dotenv').config();
 const express = require("express");
 const userConnections = require('./routes/userRoutes'); 
-const feedConnections=require('./routes/feedRoutes');
 const livingConnections=require('./routes/livingConditionsRoutes');
 const contactConnections=require('./routes/contactRoutes');
 const hobbyConnections=require('./routes/hobbyRoutes');
@@ -31,10 +30,9 @@ app.get("/", (req, res) => {
 // uses all the request handlers imported from students.js (must include /api/students route)
 app.use('/api/userRoutes', userConnections)
 app.use('/api/auth',authRoutes);
-app.use('/api/feedRoutes',feedConnections)
-app.use('api/livingConditionsRoutes',livingConnections)
-app.use('api/contactRoutes',contactConnections)
-app.use('api/hobbyRoutes',hobbyConnections)
+app.use('/api/livingConditionsRoutes',livingConnections)
+app.use('/api/contactRoutes',contactConnections)
+app.use('/api/hobbyRoutes',hobbyConnections)
 //connect to mongodb
 connectDB()
     .then(() => {
