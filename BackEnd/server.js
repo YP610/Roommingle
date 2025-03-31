@@ -1,7 +1,8 @@
 //imports required packages that we installed through the terminal
 require('dotenv').config();
 const express = require("express");
-const connections = require('./routes/databaseRoutes'); //requires API routes
+const connections = require('./routes/userRoutes'); //requires API routes
+const authRoutes = require('./routes/authRoutes');
 const cors = require('cors');
 const connectDB=require('./db');
 
@@ -24,7 +25,7 @@ app.get("/", (req, res) => {
 
 // uses all the request handlers imported from students.js (must include /api/students route)
 app.use('/api/databaseRoutes', connections)
-
+app.use('/api/auth',authRoutes);
 //connect to mongodb
 connectDB()
     .then(() => {

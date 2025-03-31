@@ -3,11 +3,13 @@ Contains functionality of all requests, so databaseRoutes simply has to call the
 */
 
 const User=require('../models/userSchema')
+const bcrypt = require('bcryptjs');
+const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
 
 // get all users
 const getUsers = async (req, res) => {
-    const users = await User.find({}).sort({createdAt: -1})
+    const users = await User.find({}).sort({createdAt: -1}).select('-password')
 
     res.status(200).json(users)
     
@@ -21,7 +23,7 @@ const getUser = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'no such user'})
     }
-    const user = await User.findById(id)
+    const user = await User.findById(id).select('-password')
 
     if (!user) {
         return res.status(404).json({error: "No such user"})
@@ -30,19 +32,66 @@ const getUser = async (req, res) => {
     res.status(200).json(user)
 }
 
+const registerUser = async (req, res) => {
+    const { username, email, password } = req.body;
 
-// create a new user
-const createUser = async (req, res) => {
-    const {name,email,password}=req.body
+    try {
+        // Check if user already exists
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
 
-    //add doc to db
-    try{
-        const user= await User.create({name,email,password}) 
-        res.status(200).json({user})
-    } catch(error){
-        res.status(400).json({error: error.message})
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Create new user
+        const user = await User.create({
+            username,
+            email,
+            password: hashedPassword
+        });
+
+        // Send token & user data
+        res.status(201).json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            token: generateToken(user._id)
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
     }
-}
+};
+
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid credentials' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Invalid credentials' });
+        }
+
+        res.json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            token: generateToken(user._id)
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+    }
+};
 
 
 // delete a user
@@ -87,7 +136,8 @@ const updateUser = async (req, res) => {
 module.exports = {
     getUsers,
     getUser,
-    createUser,
+    registerUser,
+    loginUser,
     deleteUser,
     updateUser
 }

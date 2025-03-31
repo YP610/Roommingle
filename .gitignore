@@ -1,2 +1,3 @@
+#ignroes the node_modules folder from being pushed to the repository (help with merging branches)
 BackEnd/node_modules/
 
