@@ -1,6 +1,8 @@
 //imports required packages that we installed through the terminal
 require('dotenv').config();
+const cors = require('cors');
 const express = require("express");
+
 const userRoutes = require('./routes/userRoutes'); 
 const LcRoutes=require('./routes/livingConditionsRoutes');
 const contactRoutes=require('./routes/contactRoutes');
@@ -8,7 +10,6 @@ const feedRoutes=require('./routes/feedRoutes');
 const hobbyRoutes=require('./routes/hobbyRoutes');
 //requires API routes
 const authRoutes = require('./routes/authRoutes');
-const cors = require('cors');
 const connectDB=require('./db');
 
 //express app
@@ -18,6 +19,7 @@ const PORT = process.env.PORT||8080;
 
 //middleware
 app.use(express.json())
+app.use(cors())
 
 app.use((req, res, next) => {
     console.log(req.path, req.method)

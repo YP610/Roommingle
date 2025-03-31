@@ -33,7 +33,7 @@ const getUser = async (req, res) => {
 }
 
 const registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     try {
         // Check if user already exists
@@ -48,7 +48,7 @@ const registerUser = async (req, res) => {
 
         // Create new user
         const user = await User.create({
-            username,
+            name,
             email,
             password: hashedPassword
         });
@@ -56,7 +56,7 @@ const registerUser = async (req, res) => {
         // Send token & user data
         res.status(201).json({
             _id: user._id,
-            username: user.username,
+            name: user.name,
             email: user.email,
             token: generateToken(user._id)
         });
@@ -83,7 +83,7 @@ const loginUser = async (req, res) => {
 
         res.json({
             _id: user._id,
-            username: user.username,
+            name: user.name,
             email: user.email,
             token: generateToken(user._id)
         });
