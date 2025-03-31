@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 });//just a test (delete later)
 
 // uses all the request handlers imported from students.js (must include /api/students route)
-app.use('/api/databaseRoutes', connections)
+app.use('/api/userRoutes', connections)
 app.use('/api/auth',authRoutes);
 //connect to mongodb
 connectDB()
