@@ -1,7 +1,12 @@
 //imports required packages that we installed through the terminal
 require('dotenv').config();
 const express = require("express");
-const connections = require('./routes/userRoutes'); //requires API routes
+const userConnections = require('./routes/userRoutes'); 
+const feedConnections=require('./routes/feedRoutes');
+const livingConnections=require('./routes/livingConditionsRoutes');
+const contactConnections=require('./routes/contactRoutes');
+const hobbyConnections=require('./routes/hobbyRoutes');
+//requires API routes
 const authRoutes = require('./routes/authRoutes');
 const cors = require('cors');
 const connectDB=require('./db');
@@ -24,8 +29,12 @@ app.get("/", (req, res) => {
 });//just a test (delete later)
 
 // uses all the request handlers imported from students.js (must include /api/students route)
-app.use('/api/userRoutes', connections)
+app.use('/api/userRoutes', userConnections)
 app.use('/api/auth',authRoutes);
+app.use('/api/feedRoutes',feedConnections)
+app.use('api/livingConditionsRoutes',livingConnections)
+app.use('api/contactRoutes',contactConnections)
+app.use('api/hobbyRoutes',hobbyConnections)
 //connect to mongodb
 connectDB()
     .then(() => {
