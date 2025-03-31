@@ -84,7 +84,7 @@ const updateUser = async (req, res) => {
 
 
 
-module.export = {
+module.exports = {
     getUsers,
     getUser,
     createUser,
