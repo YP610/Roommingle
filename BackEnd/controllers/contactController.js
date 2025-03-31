@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const getContacts = async (req, res) => {
     const contacts = await Contact.find({}).sort({createdAt: -1})
 
-    res.status(200).json(users)
+    res.status(200).json(contacts)
     
 }
 
@@ -20,7 +20,7 @@ const getContact = async (req, res) => {
 
     const contact = await Contact.findById(id)
 
-    if (!user) {
+    if (!contact) {
         return res.status(400).json({error: 'no such contact'})
     }
 
@@ -29,11 +29,11 @@ const getContact = async (req, res) => {
 
 //create a new contact
 const createContact = async (req, res) => {
-    const {name, email, password}=req.body
+    const {user, number, snap,insta}=req.body
 
     //add doc to db
     try{
-        const contact = await Contact.create({name, email, password})
+        const contact = await Contact.create({user, number, snap,insta})
         res.status(200).json({contact})
     } catch(error) {
         res.status(400).json({error: error.message})
@@ -73,7 +73,7 @@ const updateContact = async (req, res) => {
         return res.status(400).json({error: 'no such contact'})
     }
 
-    res.status(200).json(user)
+    res.status(200).json(contact)
 }
 
 

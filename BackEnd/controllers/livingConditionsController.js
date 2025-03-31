@@ -23,14 +23,12 @@ const getLivingCondition = async (req, res) => {
 
 // Create a new living condition
 const createLivingCondition = async (req, res) => {
-    const userId = req.user.id; // Use authenticated user
-
-    const { user, sleep_attitude, major, cleaniness_score } = req.body;
+    const { user, sleep_attitude, major, cleanliness_score } = req.body;
     try {
-        const condition = await LivingConditions.create({ user, sleep_attitude, major, cleaniness_score });
+        const condition = await LivingConditions.create({ user, sleep_attitude, major, cleanliness_score });
         res.status(200).json(condition);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: "could not add" });
     }
 };
 

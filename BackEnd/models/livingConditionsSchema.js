@@ -9,7 +9,7 @@ const LivingConditionsSchema=new mongoose.Schema({
     },
     sleep_attitude:{type:String, required:true},
     major:{type:String, required:true},
-    cleaniness_score:{type:Number, required:true},
+    cleanliness_score:{type:Number, required:true},
 },{ timestamps:true});
 
 const livingConditions = mongoose.model("LivingConditions", LivingConditionsSchema);

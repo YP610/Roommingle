@@ -3,8 +3,10 @@ const requireAuth = require('../MiddleWare/authMiddleware'); // Import middlewar
 const {
     getLivingConditions,
     getLivingCondition,
+    createLivingCondition,
     deleteLivingCondition,
-    createLivingCondition
+    updateLivingCondition,
+
     
 } = require("../controllers/livingConditionsController")
 const router = express.Router() //creates router
@@ -17,11 +19,13 @@ router.get('/', getLivingConditions)
 // Get a single Living Condition
 router.get('/:id', getLivingCondition)
 
+router.post('/',createLivingCondition)
+
 // DELETE a new Living Condition
 router.delete('/:id',requireAuth, deleteLivingCondition )
 
 // UPDATE a Living Condition
-router.patch('/:id', requireAuth, createLivingCondition)
+router.patch('/:id', requireAuth, updateLivingCondition)
 
 //exports router to server.js
 module.exports = router

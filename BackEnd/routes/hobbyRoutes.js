@@ -16,7 +16,7 @@ router.use(requireAuth);
 router.get('/', getUserHobbies)
 
 // Get a single user
-router.post('/:id', addHobby)
+router.post('/', addHobby)
 
 // DELETE a new user
 router.delete('/:id',deleteHobby)

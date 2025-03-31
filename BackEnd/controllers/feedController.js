@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 
 // get all feeds
 const getFeeds = async (req, res) => {
-    const feeds = await User.find({}).sort({createdAt: -1})
+    const feeds = await Feed.find({}).sort({createdAt: -1})
 
     res.status(200).json(feeds)
     
@@ -21,7 +21,7 @@ const getFeed = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'no such feed'})
     }
-    const feed = await User.findById(id)
+    const feed = await Feed.findById(id)
 
     if (!feed) {
         return res.status(404).json({error: "No such feed"})
@@ -33,16 +33,22 @@ const getFeed = async (req, res) => {
 
 // create a new feed
 const createFeed = async (req, res) => {
-    const {year,gender,is_honors,residence_hall}=req.body
+    const { user, year, gender, is_honors, residence_hall } = req.body;
 
-    //add doc to db
-    try{
-        const feed= await User.create({year,gender,is_honors,residence_hall}) 
-        res.status(200).json({feed})
-    } catch(error){
-        res.status(400).json({year,gender,is_honors,residence_hall})
+    console.log("Received data:", req.body); // Debugging log
+
+    if (!user) {
+        return res.status(400).json({ error: "User ID is required" });
     }
-}
+
+    try {
+        const feed = await Feed.create({ user, year, gender, is_honors, residence_hall });
+        res.status(201).json(feed);
+    } catch (error) {
+        console.error("Error creating feed:", error.message); // Log error
+        res.status(400).json({ error: error.message });
+    }
+};
 
 
 // delete a feed
@@ -53,7 +59,7 @@ const deleteFeed = async (req, res) => {
         return res.status(400).json({error: 'no such feed'})
     }
 
-    const feed = await User.findOneAndDelete({_id: id})
+    const feed = await Feed.findOneAndDelete({_id: id})
 
     if (!feed) {
         return res.status(400).json({error: 'no such feed'})
