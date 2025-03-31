@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 // Get all living conditions
 const getLivingConditions = async (req, res) => {
+    
     const conditions = await LivingConditions.find({}).sort({ createdAt: -1 }).populate('user');
     res.status(200).json(conditions);
 };
@@ -22,6 +23,8 @@ const getLivingCondition = async (req, res) => {
 
 // Create a new living condition
 const createLivingCondition = async (req, res) => {
+    const userId = req.user.id; // Use authenticated user
+
     const { user, sleep_attitude, major, cleaniness_score } = req.body;
     try {
         const condition = await LivingConditions.create({ user, sleep_attitude, major, cleaniness_score });
@@ -46,6 +49,8 @@ const deleteLivingCondition = async (req, res) => {
 
 // Update a living condition
 const updateLivingCondition = async (req, res) => {
+    const userId = req.user.id;
+
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ error: "No such living condition" });
