@@ -63,6 +63,8 @@ const deleteFeed = async (req, res) => {
     }
 
     const feed = await Feed.findOneAndDelete({_id: id})
+    algo.removeUser({id});
+
 
     if (!feed) {
         return res.status(400).json({error: 'no such feed'})

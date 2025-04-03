@@ -61,11 +61,13 @@ function addUser(user){
 function removeUser(id){
     userMap.forEach((group, groupKey) => {
         // Find the index of the user based on the unique ID
-        const index = group.findIndex(u=>u.user === id);
+        const index = group.findIndex(u=>u.user.toString(id));
         if(index!==-1){
             group.splice(index, 1);
         }
+
     });
+    console.log("Updated userMap:", userMap);
 }
 
 function updateUser(user){
