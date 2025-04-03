@@ -6,6 +6,10 @@ const User=require('../models/userSchema')
 const bcrypt = require('bcryptjs');
 const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
+const Contact = require('../models/contactSchema');
+const Feed = require('../models/feedSchema');
+const Hobby = require('../models/hobbiesSchema');
+const LivingConditions = require('../models/livingConditionsSchema');
 
 // get all users
 const getUsers = async (req, res) => {
@@ -96,20 +100,34 @@ const loginUser = async (req, res) => {
 
 // delete a user
 const deleteUser = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({error: 'no such user'})
+        return res.status(400).json({ error: 'no such user' });
     }
 
-    const user = await User.findOneAndDelete({_id: id})
+    try {
+        // Delete all related data first
+        await Promise.all([
+            Contact.deleteMany({ user: id }),
+            Feed.deleteMany({ user: id }),
+            Hobby.deleteMany({ user: id }),
+            LivingConditions.deleteMany({ user: id })
+        ]);
 
-    if (!user) {
-        return res.status(400).json({error: 'no such user'})
+        // Now delete the user
+        const user = await User.findOneAndDelete({ _id: id });
+
+        if (!user) {
+            return res.status(404).json({ error: 'no such user' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error deleting user and related data:', error);
+        res.status(500).json({ error: 'Server error during deletion' });
     }
-
-    res.status(200).json(user)
-}
+};
 
 
 // update a user
