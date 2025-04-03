@@ -48,6 +48,7 @@ function getGroupKey(user){
     else{
         groupKey="H_femaleFreshman";
     }
+    return groupKey;
 }
 function addUser(user){
     const groupKey=getGroupKey(user);

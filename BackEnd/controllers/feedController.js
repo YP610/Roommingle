@@ -79,8 +79,9 @@ const updateFeed = async (req, res) => {
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({error: "no such feed"})
     }
-
+    algo.removeUser({id});
     const feed = await Feed.findOneAndUpdate({ _id: id }, { ...req.body }, { new: true });
+    algo.updateUser({...req.body});
     
 
 
