@@ -4,7 +4,7 @@ Contains functionality of all requests, so databaseRoutes simply has to call the
 
 const Feed=require('../models/feedSchema')
 const mongoose = require('mongoose')
-const algo=require('../Algorithm/Algorithm')
+const algo=require('../Algorithm/sortingUsers')
 
 // get all feeds
 const getFeeds = async (req, res) => {
@@ -81,6 +81,7 @@ const updateFeed = async (req, res) => {
     }
 
     const feed = await Feed.findOneAndUpdate({ _id: id }, { ...req.body }, { new: true });
+    
 
 
     if (!feed) {
