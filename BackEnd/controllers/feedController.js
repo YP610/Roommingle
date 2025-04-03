@@ -4,6 +4,7 @@ Contains functionality of all requests, so databaseRoutes simply has to call the
 
 const Feed=require('../models/feedSchema')
 const mongoose = require('mongoose')
+const algo=require('../Algorithm/Algorithm')
 
 // get all feeds
 const getFeeds = async (req, res) => {
@@ -43,6 +44,7 @@ const createFeed = async (req, res) => {
 
     try {
         const feed = await Feed.create({ user, is_freshman, gender, is_honors, residence_hall });
+        algo.addUser(feed); // Adds user to hash map
         res.status(201).json(feed);
 
     } catch (error) {
