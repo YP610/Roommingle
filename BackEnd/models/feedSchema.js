@@ -7,8 +7,8 @@ const feedSchema=new mongoose.Schema({
         ref: 'User', // Reference to the User model
         required: true
     },
-    year:{type: String, required: true},
-    gender:{type: String, required: true},
+    is_freshman:{type: Boolean, required: true},
+    gender:{type: String, enum:["male","female"],required: true},
     is_honors:{type:Boolean, required:true},
     residence_hall:{type:String, required: true},
 },{ timestamps:true});

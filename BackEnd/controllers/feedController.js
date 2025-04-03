@@ -33,7 +33,7 @@ const getFeed = async (req, res) => {
 
 // create a new feed
 const createFeed = async (req, res) => {
-    const { user, year, gender, is_honors, residence_hall } = req.body;
+    const { user, is_freshman, gender, is_honors, residence_hall } = req.body;
 
     console.log("Received data:", req.body); // Debugging log
 
@@ -42,8 +42,9 @@ const createFeed = async (req, res) => {
     }
 
     try {
-        const feed = await Feed.create({ user, year, gender, is_honors, residence_hall });
+        const feed = await Feed.create({ user, is_freshman, gender, is_honors, residence_hall });
         res.status(201).json(feed);
+
     } catch (error) {
         console.error("Error creating feed:", error.message); // Log error
         res.status(400).json({ error: error.message });
