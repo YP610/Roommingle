@@ -76,11 +76,15 @@ function updateUser(user){
 
 
 }
+function tempClear(){
+    userMap.clear();
+}
 
 module.exports={
     getGroupKey,
     addUser,
     removeUser,
-    updateUser
+    updateUser,
+    tempClear
 };
 
