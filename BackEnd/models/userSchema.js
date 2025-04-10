@@ -26,10 +26,11 @@ const UserSchema = new Schema({
 
     // Living Conditions
     livingConditions: {
-        sleep_attitude: { type: String, required: true },
+        sleep_attitude: { type: String,enum:["earlyBird","nightOwl","flexible"], required: true },
         major: { type: String, required: true },
         cleanliness_score: { type: Number, required: true },
-    }
+    },
+    group:{type:String,enum:["maleFreshman","femaleFreshman","H_maleFreshman","H_femaleFreshman","maleNF","femaleNF","H_maleNF","H_femaleNF"], required:true,index:true}
 
 }, { timestamps: true });
 

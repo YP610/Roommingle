@@ -11,9 +11,9 @@ const userMap = new Map([
 
 
 function getGroupKey(user){
-    const gender=user.gender==="male"?"male":"female";
-    const freshman=user.is_freshman;
-    const honors=user.is_honors;
+    const gender=user.feed.gender==="male"?"male":"female";
+    const freshman=user.feed.is_freshman;
+    const honors=user.feed.is_honors;
 
     let groupKey;
 
@@ -48,6 +48,7 @@ function getGroupKey(user){
     else{
         groupKey="H_femaleFreshman";
     }
+    console.log(`Assigned user to group: ${groupKey}`)
     return groupKey;
 }
 function addUser(user){
