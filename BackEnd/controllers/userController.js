@@ -6,7 +6,7 @@ const User=require('../models/userSchema')
 const bcrypt = require('bcryptjs');
 const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
-const getGroupKey=require('../Algorithm/sortingUsers');
+const {getGroupKey}=require('../Algorithm/sortingUsers');
 
 
 // get all users
@@ -131,7 +131,7 @@ const deleteUser = async (req, res) => {
 // update a user
 const updateUser = async (req, res) => {
     const {id} = req.params
-    const{updates}={...req.body};
+    const updates={...req.body};
     if(updates.feed){
         updates.group=getGroupKey(updates.feed);
     }
