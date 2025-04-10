@@ -149,6 +149,32 @@ const updateUser = async (req, res) => {
     res.status(200).json(user)
 }
 
+const getUserInfoByCategory = async (req, res) => {
+    try {
+        const { userId, category } = req.params;
+
+        // Validate category input
+        const validCategories = ['contact', 'feed', 'living_conditions', 'hobbies', 'name', 'email'];
+        if (!validCategories.includes(category)) {
+            return res.status(400).json({ message: "Invalid category specified." });
+        }
+
+        // Dynamically build query to select only requested category
+        const projection = { [category]: 1, _id: 0 };
+
+        const user = await User.findById(userId, projection);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+
 
 
 module.exports = {
@@ -157,5 +183,6 @@ module.exports = {
     registerUser,
     loginUser,
     deleteUser,
-    updateUser
+    updateUser,
+    getUserInfoByCategory
 }
