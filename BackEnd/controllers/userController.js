@@ -6,7 +6,7 @@ const User=require('../models/userSchema')
 const bcrypt = require('bcryptjs');
 const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
-const algo=require('../Algorithm/sortingUsers');
+const getGroupKey=require('../Algorithm/sortingUsers');
 
 
 // get all users
@@ -57,7 +57,8 @@ const registerUser = async (req, res) => {
             contact,
             feed,
             hobbies,
-            livingConditions
+            livingConditions,
+            group
         });
 
         // Send token & user data
@@ -130,6 +131,10 @@ const deleteUser = async (req, res) => {
 // update a user
 const updateUser = async (req, res) => {
     const {id} = req.params
+    const{updates}={...req.body};
+    if(updates.feed){
+        updates.group=getGroupKey(updates.feed);
+    }
 
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({error: "no such user"})
@@ -137,9 +142,7 @@ const updateUser = async (req, res) => {
     const user = await User.findOneAndUpdate({_id: id}, {
         ...req.body // new object with properties of body
     })
-    if(updates.feed){
-        updates.group=getGroupKey(updates.feed);
-    }
+    
 
     if (!user) {
         return res.status(400).json({error: "no such user"})
