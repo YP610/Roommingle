@@ -6,10 +6,7 @@ const User=require('../models/userSchema')
 const bcrypt = require('bcryptjs');
 const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
-const Contact = require('../models/contactSchema');
-const Feed = require('../models/feedSchema');
-const Hobby = require('../models/hobbiesSchema');
-const LivingConditions = require('../models/livingConditionsSchema');
+
 
 // get all users
 const getUsers = async (req, res) => {
@@ -37,7 +34,7 @@ const getUser = async (req, res) => {
 }
 
 const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password,contact,feed,hobbies,livingConditions} = req.body;
 
     try {
         // Check if user already exists
@@ -54,7 +51,11 @@ const registerUser = async (req, res) => {
         const user = await User.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            contact,
+            feed,
+            hobbies,
+            livingConditions
         });
 
         // Send token & user data
@@ -107,14 +108,7 @@ const deleteUser = async (req, res) => {
     }
 
     try {
-        // Delete all related data first
-        await Promise.all([
-            Contact.deleteMany({ user: id }),
-            Feed.deleteMany({ user: id }),
-            Hobby.deleteMany({ user: id }),
-            LivingConditions.deleteMany({ user: id })
-        ]);
-
+        
         // Now delete the user
         const user = await User.findOneAndDelete({ _id: id });
 

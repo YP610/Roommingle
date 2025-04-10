@@ -25,7 +25,7 @@ const UserSchema = new Schema({
     hobbies: { type: String, required: false },
 
     // Living Conditions
-    living_conditions: {
+    livingConditions: {
         sleep_attitude: { type: String, required: true },
         major: { type: String, required: true },
         cleanliness_score: { type: Number, required: true },
