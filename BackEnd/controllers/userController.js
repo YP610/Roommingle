@@ -154,7 +154,7 @@ const getUserInfoByCategory = async (req, res) => {
         const { userId, category } = req.params;
 
         // Validate category input
-        const validCategories = ['contact', 'feed', 'livingConditions', 'hobbies', 'name', 'email'];
+        const validCategories = ['contact', 'feed', 'livingConditions', 'hobbies', 'name', 'email','number'];
         if (!validCategories.includes(category)) {
             return res.status(400).json({ message: "Invalid category specified." });
         }

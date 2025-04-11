@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 })
 // routes
 app.get("/", (req, res) => {
-    res.send("Hello, Mike!")
+    // I think this is where we should redirect from to get the algorithm grouping done,
 });//just a test (delete later)
 
 // uses all the request handlers imported from students.js (must include /api/students route)

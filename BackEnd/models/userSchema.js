@@ -5,10 +5,10 @@ const UserSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    number: { type: String, required: false },
 
     // Contact Information
     contact: {
-        number: { type: String, required: false },
         snap: { type: String, required: false },
         insta: { type: String, required: false },
     },
@@ -25,12 +25,11 @@ const UserSchema = new Schema({
     hobbies: { type: String, required: false },
 
     // Living Conditions
-    livingConditions: {
-        sleep_attitude: { type: String,enum:["earlyBird","nightOwl","flexible"], required: true },
+    living_conditions: {
+        sleep_attitude: { type: String, required: true },
         major: { type: String, required: true },
         cleanliness_score: { type: Number, required: true },
-    },
-    group:{type:String,enum:["maleFreshman","femaleFreshman","H_maleFreshman","H_femaleFreshman","maleNF","femaleNF","H_maleNF","H_femaleNF"], required:true,index:true}
+    }
 
 }, { timestamps: true });
 
