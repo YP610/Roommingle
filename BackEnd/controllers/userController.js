@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
 const algo=require('../Algorithm/sortingUsers');
-const test=require('../Algorithm/recs')
+const {getRec}=require('../Algorithm/recs')
 
 
 // get all users
@@ -174,6 +174,15 @@ const getUserInfoByCategory = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
+}
+const getRecommendations = async (req, res) => {
+    try {
+        const recommendations = await getRec(req.user._id);
+        res.status(200).json(recommendations);
+    } catch (error) {
+        console.error("Error generating recommendations:", error);
+        res.status(500).json({ error: "Failed to get recommendations" });
+    }
 };
 
 
@@ -186,5 +195,6 @@ module.exports = {
     loginUser,
     deleteUser,
     updateUser,
-    getUserInfoByCategory
+    getUserInfoByCategory,
+    getRecommendations
 }

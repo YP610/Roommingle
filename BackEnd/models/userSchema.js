@@ -18,7 +18,12 @@ const UserSchema = new Schema({
         is_freshman: { type: Boolean, required: true },
         gender: { type: String, enum: ["male", "female"], required: true },
         is_honors: { type: Boolean, required: true },
-        residence_hall: { type: String, required: true },
+        rank: {
+            type: [String],
+            validate: [array => array.length <= 3, 'Cannot select more than 3 preferences'],
+            enum: ["CHC", "SW", "OH", "NE", "No", "CE", "Sy"],
+            required: true
+          }
     },
 
     // Hobbies
