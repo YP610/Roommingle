@@ -7,10 +7,12 @@ const bcrypt = require('bcryptjs');
 const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
 const algo=require('../Algorithm/sortingUsers');
+const test=require('../Algorithm/recs')
 
 
 // get all users
 const getUsers = async (req, res) => {
+    const groupUsers = await test("H_maleFreshman")
     const users = await User.find({}).sort({createdAt: -1}).select('-password')
 
     res.status(200).json(users)
