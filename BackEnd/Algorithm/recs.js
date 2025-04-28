@@ -3,7 +3,9 @@ const User = require('../models/userSchema');
 async function getGroup(groupKey, currentUserId) {
     const users = await User.find({ 
         group: groupKey,
-        _id: { $ne: currentUserId }  // 👈 Exclude the current user
+        _id: { $ne: currentUserId,
+               $nin: usersSeenIds 
+            } 
     });
     return users;
 }
@@ -72,6 +74,7 @@ async function getRec(userId){
     const currentUser=await User.findById(userId).select('-password'); 
     const groupUsers=await getGroup(currentUser.group,currentUser);
     const scoreMap=new Map();
+    let seenUsers=[];
     for(let i=0;i<groupUsers.length;i++){
         let key=await getScore(currentUser,groupUsers[i])
         if(!scoreMap.has(key)){
@@ -97,6 +100,15 @@ async function filter(userId,scoreMap){
         orderedUsers.push(...usersAtScore);
     }
     return orderedUsers;
+}
+async function lastSeen(lastUser){
+    usersSeen=[];
+    for(let i=0;i<orderedUsers;i++){
+        usersSeen.push(orderedUsers[i])
+        if(orderedUsers[i]==lastUser){
+            break;
+        }
+    }
 }
 /*function residentialMatchList(userId){
     let buckets = getRec(userId);
