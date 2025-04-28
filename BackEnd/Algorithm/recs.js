@@ -110,17 +110,6 @@ async function lastSeen(lastUser){
         }
     }
 }
-/*function residentialMatchList(userId){
-    let buckets = getRec(userId);
-    const sortedEntries = Array.from(buckets.entries()).sort((a, b) => a[0] - b[0]);
-    const orderedNames = [];
-    for (const [key, names] of sortedEntries) {
-        orderedNames.push(...names);
-    return orderedNames;
-}
-}
-*/
-
 
 module.exports=getRec;
 
