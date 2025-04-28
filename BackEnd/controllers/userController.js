@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
 const algo=require('../Algorithm/sortingUsers');
-const {getRec}=require('../Algorithm/recs')
+const getRec=require('../Algorithm/recs')
 
 
 // get all users
@@ -176,10 +176,7 @@ const getUserInfoByCategory = async (req, res) => {
 }
 const getRecommendations = async (req, res) => {
     try {
-        console.log("req.params.id:", req.params.id);
-        console.log("req.user:", req.user);
-
-        const userId = req.params.id || req.user._id;
+        const userId = req.params.id;
         console.log("Using userId:", userId);
 
         const recommendations = await getRec(userId);

@@ -1,9 +1,10 @@
 const User = require('../models/userSchema');
 
-async function getGroup(groupKey){
-    //COMPLETED-Gets group key
-    const users = await User.find({ group: groupKey });
-    console.log(users);
+async function getGroup(groupKey, currentUserId) {
+    const users = await User.find({ 
+        group: groupKey,
+        _id: { $ne: currentUserId }  // 👈 Exclude the current user
+    });
     return users;
 }
 
@@ -17,7 +18,7 @@ async function getScore(currentUser,otherUser){
     const otherResidenceRankings = otherUser.feed.rank; 
     let score = 0;
     if (userResidenceRankings[0] == otherResidenceRankings[0]){
-        score = score + firstval * firstval;
+        score = score + firstval * firstval+2;
     }
     if (userResidenceRankings[1] == otherResidenceRankings[0]){
         score = score + firstval * secondval;
@@ -42,9 +43,6 @@ async function getScore(currentUser,otherUser){
     }
     if (userResidenceRankings[2] == otherResidenceRankings[2]){
         score = score + thirdval * thirdval;
-    }
-    if(score>=100){
-        score+=2;
     }
     let bucketScore=getBucket(score);
     return bucketScore;
@@ -72,7 +70,7 @@ function getBucket(score){
 async function getRec(userId){
     //COMPLETED-will add the correct users to the correct list in the map depending on score
     const currentUser=await User.findById(userId).select('-password'); 
-    const groupUsers=await getGroup(currentUser.group);
+    const groupUsers=await getGroup(currentUser.group,currentUser);
     const scoreMap=new Map();
     for(let i=0;i<groupUsers.length;i++){
         let key=await getScore(currentUser,groupUsers[i])
@@ -81,8 +79,24 @@ async function getRec(userId){
         }
         scoreMap.get(key).push(groupUsers[i]);
     }
-    console.log(scoreMap);
-    return scoreMap;
+    console.log(scoreMap)
+    const orderedUsers=filter(currentUser,scoreMap);
+    console.log(orderedUsers)
+    return orderedUsers;
+}
+async function filter(userId,scoreMap){
+    let myScore=userId.livingConditions.cleanliness_score;
+    const sortedKeys = Array.from(scoreMap.keys()).sort((a, b) => b - a);
+    const orderedUsers=[];
+    for(let key of sortedKeys){
+        let usersAtScore=scoreMap.get(key);
+        for(let i=0;i<usersAtScore.length;i++){
+            usersAtScore[i].cleanDiff=Math.abs(myScore-usersAtScore[i].livingConditions.cleanliness_score);
+        }
+        usersAtScore.sort((a, b) => a.cleanDiff - b.cleanDiff);
+        orderedUsers.push(...usersAtScore);
+    }
+    return orderedUsers;
 }
 /*function residentialMatchList(userId){
     let buckets = getRec(userId);

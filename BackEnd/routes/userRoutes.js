@@ -27,7 +27,7 @@ router.patch('/:id', requireAuth, updateUser)
 
 router.get('/:userId/category/:category',getUserInfoByCategory)
 
-router.get('/:userId/recs',requireAuth,getRecommendations)
+router.get('/recs/:id',requireAuth,getRecommendations)
 
 //exports router to server.js
 module.exports = router
