@@ -12,7 +12,6 @@ const {getRec}=require('../Algorithm/recs')
 
 // get all users
 const getUsers = async (req, res) => {
-    const groupUsers = await test("H_maleFreshman")
     const users = await User.find({}).sort({createdAt: -1}).select('-password')
 
     res.status(200).json(users)
@@ -177,15 +176,19 @@ const getUserInfoByCategory = async (req, res) => {
 }
 const getRecommendations = async (req, res) => {
     try {
-        const recommendations = await getRec(req.user._id);
+        console.log("req.params.id:", req.params.id);
+        console.log("req.user:", req.user);
+
+        const userId = req.params.id || req.user._id;
+        console.log("Using userId:", userId);
+
+        const recommendations = await getRec(userId);
         res.status(200).json(recommendations);
     } catch (error) {
         console.error("Error generating recommendations:", error);
         res.status(500).json({ error: "Failed to get recommendations" });
     }
 };
-
-
 
 
 module.exports = {

@@ -6,6 +6,8 @@ const {
     deleteUser,
     updateUser,
     getUserInfoByCategory,
+    getRecommendations,
+    
 } = require("../controllers/userController")
 const router = express.Router() //creates router
 
@@ -24,6 +26,8 @@ router.delete('/:id',requireAuth, deleteUser)
 router.patch('/:id', requireAuth, updateUser)
 
 router.get('/:userId/category/:category',getUserInfoByCategory);
+
+router.get('/:userId/recs',requireAuth,getRecommendations)
 
 //exports router to server.js
 module.exports = router
