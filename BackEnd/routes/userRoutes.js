@@ -25,7 +25,7 @@ router.delete('/:id',requireAuth, deleteUser)
 // UPDATE a user
 router.patch('/:id', requireAuth, updateUser)
 
-router.get('/:userId/category/:category',getUserInfoByCategory);
+router.get('/:userId/category/:category',getUserInfoByCategory)
 
 router.get('/:userId/recs',requireAuth,getRecommendations)
 
