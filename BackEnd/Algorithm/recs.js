@@ -9,8 +9,40 @@ async function getGroup(groupKey){
 
 
 async function getScore(currentUser,otherUser){
-    //NEED FUNCTION to go here to give the scores, only thing here is incrementing and fixing scores for ranges
-    
+    //10,5,1
+    const firstval = 10;
+    const secondval = 5;
+    const thirdval = 1;
+    const userResidenceRankings = currentUser.feed.rank; 
+    const otherResidenceRankings = otherUser.feed.rank; 
+    let score = 0;
+    if (userResidenceRankings[0] == otherResidenceRankings[0]){
+        score = score + firstval * firstval;
+    }
+    if (userResidenceRankings[1] == otherResidenceRankings[0]){
+        score = score + firstval * secondval;
+    }
+    if (userResidenceRankings[2] == otherResidenceRankings[0]){
+        score = score + firstval * thirdval;
+    }
+    if (userResidenceRankings[0] == otherResidenceRankings[1]){
+        score = score + firstval * secondval;
+    }
+    if (userResidenceRankings[1] == otherResidenceRankings[1]){
+        score = score + secondval * secondval;
+    }
+    if (userResidenceRankings[2] == otherResidenceRankings[1]){
+        score = score + thirdval * secondval;
+    }
+    if (userResidenceRankings[0] == otherResidenceRankings[2]){
+        score = score + firstval * thirdval;
+    }
+    if (userResidenceRankings[1] == otherResidenceRankings[2]){
+        score = score + thirdval * secondval;
+    }
+    if (userResidenceRankings[2] == otherResidenceRankings[2]){
+        score = score + thirdval * thirdval;
+    }
     if(score>=100){
         score+=2;
     }
@@ -52,7 +84,16 @@ async function getRec(userId){
     console.log(scoreMap);
     return scoreMap;
 }
-
+/*function residentialMatchList(userId){
+    let buckets = getRec(userId);
+    const sortedEntries = Array.from(buckets.entries()).sort((a, b) => a[0] - b[0]);
+    const orderedNames = [];
+    for (const [key, names] of sortedEntries) {
+        orderedNames.push(...names);
+    return orderedNames;
+}
+}
+*/
 
 
 module.exports=getRec;
