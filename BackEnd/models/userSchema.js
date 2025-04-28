@@ -21,7 +21,7 @@ const UserSchema = new Schema({
         rank: {
             type: [String],
             validate: [array => array.length <= 3, 'Cannot select more than 3 preferences'],
-            enum: ["CHC", "SW", "OH", "NE", "No", "CE", "Sy"],
+            enum: ["CHC", "SW", "OH", "NE", "NA", "CE", "Sy"],
             required: true
           }
     },
