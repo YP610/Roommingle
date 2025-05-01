@@ -36,7 +36,7 @@ const getUser = async (req, res) => {
 }
 
 const registerUser = async (req, res) => {
-    const { name, email, password,contact,feed,hobbies,livingConditions} = req.body;
+    const { name, email, password,profile_pic, bio, prof_questions, contact,feed,hobbies,livingConditions} = req.body;
 
     try {
         // Check if user already exists
@@ -158,7 +158,7 @@ const getUserInfoByCategory = async (req, res) => {
         const { userId, category } = req.params;
 
         // Validate category input
-        const validCategories = ['contact', 'feed','prof_questions', 'livingConditions', 'hobbies', 'name','profile_pic', 'email','number'];
+        const validCategories = ['contact', 'feed','prof_questions', 'livingConditions','bio', 'hobbies', 'name','profile_pic', 'email','number'];
         if (!validCategories.includes(category)) {
             return res.status(400).json({ message: "Invalid category specified." });
         }
