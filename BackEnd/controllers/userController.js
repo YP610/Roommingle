@@ -53,8 +53,11 @@ const registerUser = async (req, res) => {
         // Create new user
         const user = await User.create({
             name,
+            profile_pic,
             email,
             password: hashedPassword,
+            bio,
+            prof_questions,
             contact,
             feed,
             hobbies,
@@ -155,7 +158,7 @@ const getUserInfoByCategory = async (req, res) => {
         const { userId, category } = req.params;
 
         // Validate category input
-        const validCategories = ['contact', 'feed', 'livingConditions', 'hobbies', 'name', 'email','number'];
+        const validCategories = ['contact', 'feed','prof_questions', 'livingConditions', 'hobbies', 'name','profile_pic', 'email','number'];
         if (!validCategories.includes(category)) {
             return res.status(400).json({ message: "Invalid category specified." });
         }
