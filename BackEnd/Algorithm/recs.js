@@ -1,4 +1,5 @@
 const User = require('../models/userSchema');
+const calculateClean=require('./sortingUsers');
 
 async function getGroup(groupKey, currentUserId) {
     const users = await User.find({ 
@@ -69,24 +70,7 @@ function getBucket(score){
     }
     return score;
 }
-async function getRec(userId){
-    //COMPLETED-will add the correct users to the correct list in the map depending on score
-    const currentUser=await User.findById(userId).select('-password'); 
-    const groupUsers=await getGroup(currentUser.group,currentUser);
-    const scoreMap=new Map();
-    let seenUsers=[];
-    for(let i=0;i<groupUsers.length;i++){
-        let key=await getScore(currentUser,groupUsers[i])
-        if(!scoreMap.has(key)){
-            scoreMap.set(key,[]);
-        }
-        scoreMap.get(key).push(groupUsers[i]);
-    }
-    console.log(scoreMap)
-    const orderedUsers=filter(currentUser,scoreMap);
-    console.log(orderedUsers)
-    return orderedUsers;
-}
+
 async function filter(userId,scoreMap){
     let myScore=userId.livingConditions.cleanliness_score;
     const sortedKeys = Array.from(scoreMap.keys()).sort((a, b) => b - a);
@@ -110,9 +94,23 @@ async function lastSeen(lastUser){
         }
     }
 }
+async function getRec(userId){
+    //COMPLETED-MASTER FUNCTION will add the correct users to the correct list in the map depending on score
+    const currentUser=await User.findById(userId).select('-password'); 
+    const groupUsers=await getGroup(currentUser.group,currentUser);
+    const scoreMap=new Map();
+    let seenUsers=[];
+    for(let i=0;i<groupUsers.length;i++){
+        let key=await getScore(currentUser,groupUsers[i])
+        if(!scoreMap.has(key)){
+            scoreMap.set(key,[]);
+        }
+        scoreMap.get(key).push(groupUsers[i]);
+    }
+    console.log(scoreMap)
+    const orderedUsers=filter(currentUser,scoreMap);
+    console.log(orderedUsers)
+    return orderedUsers;
+}
 
 module.exports=getRec;
-
-
-
-

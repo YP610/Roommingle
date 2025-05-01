@@ -8,6 +8,7 @@ const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
 const algo=require('../Algorithm/sortingUsers');
 const getRec=require('../Algorithm/recs')
+const calculateClean=require('../Algorithm/sortingUsers')
 
 
 // get all users
@@ -49,6 +50,13 @@ const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const group=algo.getGroupKey({feed});
+        const cleanliness_score = calculateClean(cleanlinessRatings || []);
+
+        // Merge score into nested livingConditions
+        const updatedLivingConditions = {
+            ...livingConditions,
+            cleanliness_score
+        };
 
         // Create new user
         const user = await User.create({
@@ -61,7 +69,7 @@ const registerUser = async (req, res) => {
             contact,
             feed,
             hobbies,
-            livingConditions,
+            livingConditions: updatedLivingConditions,
             group
         });
 
@@ -138,6 +146,11 @@ const updateUser = async (req, res) => {
     const updates={...req.body};
     updates.group = algo.getGroupKey(updates); // or { feed: updates.feed }
     
+    // Safely update cleanliness_score inside livingConditions
+    updates.livingConditions = {
+        ...updates.livingConditions,
+        cleanliness_score: calculateClean(scores)
+    };
 
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({error: "no such user"})

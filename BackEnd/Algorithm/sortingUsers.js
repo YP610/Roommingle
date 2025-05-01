@@ -82,12 +82,28 @@ function updateUser(user){
 function tempClear(){
     userMap.clear();
 }
+function calculateClean(scores){
+    let sum=0;
+    let questions=5;
+    for(let i=0;i<scores.length;i++){
+        let base=10;
+        base+=scores[i]
+        sum+=base;
+    }
+    let average=sum/questions;
+    return average;
+}
+
+
+
+
 
 module.exports={
     getGroupKey,
     addUser,
     removeUser,
     updateUser,
-    tempClear
+    tempClear,
+    calculateClean
 };
 
