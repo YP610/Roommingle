@@ -34,6 +34,7 @@ const UserSchema = new Schema({
             required: true
           }
     },
+    
 
     // Hobbies
     hobbies: { type: String, required: false },
@@ -43,9 +44,18 @@ const UserSchema = new Schema({
         major: { type: String, required: true },
         cleanliness_score: { type: Number, required: true }
     },
-    group:{type:String,enum:["maleFreshman","femaleFreshman","H_maleFreshman","H_femaleFreshman","maleNF","femaleNF","H_maleNF","H_femaleNF"], required:true,index:true}
+    group:{type:String,enum:["maleFreshman","femaleFreshman","H_maleFreshman","H_femaleFreshman","maleNF","femaleNF","H_maleNF","H_femaleNF"], required:true,index:true},
     
-}, { timestamps: true });
+    profile_pic_info: {
+        url: { type: String },
+        filename: { type: String },
+        contentType: { type: String },
+        size: { type: Number },
+    }
+    
+}, 
+
+{ timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;
