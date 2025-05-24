@@ -11,8 +11,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
-      <Login/>
-      <SignUp/>
+      
     </BrowserRouter>
    
   </React.StrictMode>

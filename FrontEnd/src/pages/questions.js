@@ -2,6 +2,30 @@ import { useState } from 'react';
 
 const questions = [
     {
+    id: 'name',
+    text: 'What is your preferred name?',
+    type: 'text',
+    required: true
+    },
+    {
+    id: 'number',
+    text: 'Phone number (optional)',
+    type: 'text',
+    required: false
+    },
+    {
+    id: 'insta',
+    text: 'Instagram handle (optional)',
+    type: 'text',
+    required: false
+    },
+    {
+    id: 'snap',
+    text: 'Snapchat handle (optional)',
+    type: 'text',
+    required: false
+    },
+    {
         id: 'is_freshman',
         text: "Are you a freshman?",
         options: [
@@ -60,6 +84,90 @@ const questions = [
             { label: "Southwest", value: 'SW'},
             { label: "Sylvan", value: 'Sy'}
         ]
+    },
+    //Cleanliness Questions:
+    {
+        id: 'q1',
+        text: "What best describes the state of your room and shared spaces?",
+        options: [
+            { label: "Always tidy, no clutter or trash", value: 2},
+            { label: "Occasionally messy, but I clean up quickly", value: 1},
+            { label: "A little messy, but still livable", value: 0},
+            { label: "Often cluttered or dirty", value: -1},
+            { label: "Trash, laundry, or stuff is frequently left everywhere", value: -2}
+        ]
+    },
+    {
+        id: 'q2',
+        text: "How often do you clean your space?",
+        options: [
+            { label: "Every day", value: 2},
+            { label: "Somewhat often", value: 1},
+            { label: "Meh", value: 0},
+            { label: "Somewhat not often", value: -1},
+            { label: "Rarely if ever", value: -2}
+        ]
+    },
+    
+    {
+    id: 'q3',
+    text: 'Could you describe your weekly shower habits?',
+    options: [
+        { label: 'Twice a day or more when needed',               value:  2 },
+        { label: 'About once a day',                               value:  1 },
+        { label: 'Most days, but I occasionally skip',             value:  0 },
+        { label: 'A few times a week depending on my schedule',    value: -1 },
+        { label: "Rarely, only when I feel it's absolutely necessary", value: -2 },
+    ]
+    },
+    {
+    id: 'q4',
+    text: 'How often do you eat in your dorm?',
+    options: [
+        { label: 'Rarely or never — I usually eat in dining areas or kitchens', value:  2 },
+        { label: 'Occasionally — maybe a snack or quick meal now and then',      value:  1 },
+        { label: 'About half my meals are in my dorm',                           value:  0 },
+        { label: 'Most meals are eaten in my room, but I try to clean up after', value: -1 },
+        { label: 'I eat in my room all the time and often leave dishes, wrappers, or crumbs behind', value: -2 },
+    ]
+    },
+    {
+    id: 'q5',
+    text: 'How would you describe your oral hygiene routine?',
+    options: [
+        { label: 'I brush twice daily, floss regularly, and use mouthwash', value:  2 },
+        { label: 'I brush twice daily and floss occasionally',                  value:  1 },
+        { label: 'I usually brush once a day',                                  value:  0 },
+        { label: 'I forget to brush for a day or two at times',                 value: -1 },
+        { label: "I rarely brush or take care of my teeth",                    value: -2 },
+    ]
+    },
+    {
+    id: 'hobbies',
+    text: 'List your top 3 hobbies (optional)', //might have to check for appropriateness
+    type: 'text',
+    required: false
+    },
+    {
+    id: 'sleep_attitude',
+    text: 'How would you describe your chronotype',
+    options: [
+        { label: 'Early bird', value:  1 },
+        { label: 'Night owl', value:  -1 },
+        { label: 'Flexible', value:  0 }
+    ]
+    },
+    {
+    id: 'major',
+    text: 'What is your major?', //might have to check for appropriateness
+    type: 'text',
+    required: true
+    },
+    {
+    id: 'bio',
+    text: 'Bio (optional)', //might have to check for appropriateness
+    type: 'text',
+    required: true
     }
 ];
 //TODO: 1) Make it so that if user is an honors student, the website doesn't ask for their dorm ranking 2) Connect responses from frontend to groups in backend
@@ -81,21 +189,33 @@ export default function Survey() {
     const handleSubmit = async e => {
         e.preventDefault();
         setError('');
+
         // simple validation
-        if (!name) {
-            setError('Name is required');
+        if (!name || !email) {
+            setError('Name and email are required.');
             return;
         }
-        // ensure every question has an answer
-        const unanswered = Object.entries(answers)
-        .filter(([_, v]) => !v)
-        .map(([id]) => id);
-        if (unanswered.length) {
-        setError('Please answer all questions.');
-        return;
-        }
-
-        //try catch block
         
+        // Prepare the "answers" payload: drop any unanswered (null/empty) entries
+        const answered = Object.entries(answers)
+          .filter(([, val]) => val) // keep only truthy values
+          .reduce((obj, [key, val]) => ({ ...obj, [key]: val }), {});
+        
+        // Build full request body
+        const body = {
+            name,
+            email,
+            //only include profile_pic / bio if the user sets them
+            ...(profilePic && { profile_pic: profilePic }),
+            ...(bio && { bio: bio }),
+            // put your survey answers under prof_questions (or wherever your schema expects them)
+            prof_questions: answered,
+            // any other required fields—for example, if your schema needs a password:
+            // password,
+        };
+
+        // try catch
     }
 }
+
+//TODO: 1) Make sure id's of questions are consistent with schema 2) Refine schema 3) Make sure schema and question format are consistent

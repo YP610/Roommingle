@@ -1,4 +1,36 @@
+import React, { useState } from 'react';
+
 const SignUp = () => {
+    const[email, setEmail] = useState('');
+    const[password, setPassword] = useState('');
+    const[confirmPassword, setConfirmPassword] = useState('');
+    const[error, setError] = useState('');
+
+   
+
+    const handleSignUp = async () => {
+        setError('');
+
+        if(password !== confirmPassword) {
+            setError("Passwords don't match.");
+            return;
+        }
+        try {
+            const res = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password}),
+            });
+            if (!res.ok) throw new Error('Sign up failed');
+            const user = await res.json();
+            console.log('Signed up: ', user);
+        } catch (err) {
+            setError(err.message);
+        }
+
+
+    };
+
     return ( 
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'linear-gradient(135deg, #ff4e50 0%, #f5f5f5 100%)' }}>
             <div style={{
@@ -16,6 +48,8 @@ const SignUp = () => {
                 <input
                     type="text"
                     placeholder="Email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     style={{
                         width: '100%',
                         padding: '12px',
@@ -28,6 +62,8 @@ const SignUp = () => {
                 <input
                     type="password"
                     placeholder="Password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
                     style={{
                         width: '100%',
                         padding: '12px',
@@ -40,6 +76,8 @@ const SignUp = () => {
                 <input 
                     type="password"
                     placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
                     style={{
                         width: '100%',
                         padding: '12px',
@@ -50,6 +88,7 @@ const SignUp = () => {
                     }}
                 />
                 <button
+                    onClick={handleSignUp}
                     style={{
                         width: '100%',
                         padding: '12px',
