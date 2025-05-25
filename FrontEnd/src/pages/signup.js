@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
     const[email, setEmail] = useState('');
     const[password, setPassword] = useState('');
     const[confirmPassword, setConfirmPassword] = useState('');
     const[error, setError] = useState('');
+    const navigate = useNavigate();
 
    
 
@@ -13,22 +15,10 @@ const SignUp = () => {
 
         if(password !== confirmPassword) {
             setError("Passwords don't match.");
+
             return;
         }
-        try {
-            const res = await fetch('/api/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password}),
-            });
-            if (!res.ok) throw new Error('Sign up failed');
-            const user = await res.json();
-            console.log('Signed up: ', user);
-        } catch (err) {
-            setError(err.message);
-        }
-
-
+        navigate('/survey', { state: { email, password }});
     };
 
     return ( 

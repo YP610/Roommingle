@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 const questions = [
     {
     id: 'name',
@@ -170,52 +168,5 @@ const questions = [
     required: true
     }
 ];
-//TODO: 1) Make it so that if user is an honors student, the website doesn't ask for their dorm ranking 2) Connect responses from frontend to groups in backend
 
-export default function Survey() {
-    // 1) user info
-    const [name, setName] = useState('');
-    // answers map: { [questionId]: 'A' | 'B' | ...}
-    const [answers, setAnswers] = useState(
-        questions.reduce((acc, q) => ({ ...acc, [q.id]: null }), {})
-    );
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-
-    const handleAnswer = (id, val) => {
-        setAnswers(prev => ({...prev, [id]: val }));
-    };
-
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setError('');
-
-        // simple validation
-        if (!name || !email) {
-            setError('Name and email are required.');
-            return;
-        }
-        
-        // Prepare the "answers" payload: drop any unanswered (null/empty) entries
-        const answered = Object.entries(answers)
-          .filter(([, val]) => val) // keep only truthy values
-          .reduce((obj, [key, val]) => ({ ...obj, [key]: val }), {});
-        
-        // Build full request body
-        const body = {
-            name,
-            email,
-            //only include profile_pic / bio if the user sets them
-            ...(profilePic && { profile_pic: profilePic }),
-            ...(bio && { bio: bio }),
-            // put your survey answers under prof_questions (or wherever your schema expects them)
-            prof_questions: answered,
-            // any other required fields—for example, if your schema needs a password:
-            // password,
-        };
-
-        // try catch
-    }
-}
-
-//TODO: 1) Make sure id's of questions are consistent with schema 2) Refine schema 3) Make sure schema and question format are consistent
+export default questions;

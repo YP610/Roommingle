@@ -49,59 +49,60 @@ export default function Survey() {
     };
 
     return (
-    <div className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-6 text-center">Complete Your Profile</h1>
+  <div className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-md max-h-[80vh] overflow-y-auto">
+    <h1 className="text-3xl font-bold mb-6 text-center">Complete Your Profile</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-            {questions.map(q => (
-            <div key={q.id} className="flex flex-col">
-            <label htmlFor={q.id} className="mb-2 font-medium text-gray-700">
-                {q.text}
-                {q.required && <span className="text-red-500 ml-1">*</span>}
-            </label>
+    <form onSubmit={handleSubmit} className="space-y-12">
+      {questions.map(q => (
+        <div key={q.id} className="flex flex-col">
+          <label htmlFor={q.id} className="mb-2 font-medium text-gray-700">
+            {q.text}
+            {q.required && <span className="text-red-500 ml-1">*</span>}
+          </label>
 
-            {q.type === 'text' ? (
-                <input
-                id={q.id}
-                type="text"
-                value={answers[q.id]}
-                onChange={e => handleAnswer(q.id, e.target.value)}
-                required={q.required}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-            ) : (
-                <div className="space-y-2">
-                {q.options.map(opt => (
-                    <label key={opt.value} className="inline-flex items-center">
-                    <input
-                        type="radio"
-                        name={q.id}
-                        value={opt.value}
-                        checked={answers[q.id] === opt.value}
-                        onChange={() => handleAnswer(q.id, opt.value)}
-                        required={q.required}
-                        className="form-radio text-blue-600"
-                    />
-                    <span className="ml-2">{opt.label}</span>
-                    </label>
-                ))}
-                </div>
-            )}
+          {q.type === 'text' ? (
+            <input
+              id={q.id}
+              type="text"
+              value={answers[q.id]}
+              onChange={e => handleAnswer(q.id, e.target.value)}
+              required={q.required}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          ) : (
+            <div className="space-y-2">
+              {q.options.map(opt => (
+                <label key={opt.value} className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name={q.id}
+                    value={opt.value}
+                    checked={answers[q.id] === opt.value}
+                    onChange={() => handleAnswer(q.id, opt.value)}
+                    required={q.required}
+                    className="form-radio text-blue-600"
+                  />
+                  <span className="ml-2">{opt.label}</span>
+                </label>
+              ))}
             </div>
-        ))}
+          )}
+        </div>
+      ))}
 
-        {error && <p className="text-red-600">{error}</p>}
-        {success && <p className="text-green-600">{success}</p>}
+      {error   && <p className="text-red-600">{error}</p>}
+      {success && <p className="text-green-600">{success}</p>}
 
-        <button
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
-        >
-            Submit
-        </button>
-        </form>
-    </div>
-    );
+      <button
+        type="submit"
+        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+);
+
 }
 
 //TODO: 1) Make sure id's of questions are consistent with schema 2) Refine schema 3) Make sure schema and question format are consistent
