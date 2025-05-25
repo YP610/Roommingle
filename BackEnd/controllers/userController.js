@@ -8,7 +8,7 @@ const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
 const algo=require('../Algorithm/sortingUsers');
 const getRec=require('../Algorithm/recs')
-const calculateClean=require('../Algorithm/sortingUsers')
+const {calculateClean}=require('../Algorithm/sortingUsers')
 
 
 // get all users
@@ -37,7 +37,9 @@ const getUser = async (req, res) => {
 }
 
 const registerUser = async (req, res) => {
-    const { name, email, password,profile_pic, bio, prof_questions, contact,feed,hobbies,livingConditions} = req.body;
+    console.log("📥 Incoming body:", JSON.stringify(req.body, null, 2));
+
+    const { name, email, password,bio,prof_questions, contact,feed,hobbies,livingConditions} = req.body;
 
     try {
         // Check if user already exists
@@ -52,6 +54,7 @@ const registerUser = async (req, res) => {
         const group=algo.getGroupKey({feed});
         const cleanliness_score = calculateClean(prof_questions);
 
+
         // Merge score into nested livingConditions
         const updatedLivingConditions = {
             ...livingConditions,
@@ -61,7 +64,6 @@ const registerUser = async (req, res) => {
         // Create new user
         const user = await User.create({
             name,
-            profile_pic,
             email,
             password: hashedPassword,
             bio,
@@ -82,9 +84,20 @@ const registerUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ error: 'Server error' });
+    if (error.name === 'ValidationError') {
+        const details = Object.entries(error.errors)
+            .map(([key, err]) => `${key}: ${err.message}`)
+            .join(' | ');
+        console.error("❌ Validation Error:", details);
+        return res.status(400).json({ error: details });
     }
+
+    console.error("❌ registerUser error:", error); // full fallback
+    res.status(500).json({ error: 'Server error' });
+}
 };
+
+
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;

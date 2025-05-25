@@ -39,6 +39,7 @@ export default function Survey() {
         const body = {
             name:answers.name,
             email,
+            password,
             prof_questions:{
                 q1:answers.q1,
                 q2:answers.q2,
@@ -65,7 +66,7 @@ export default function Survey() {
             bio:answers.bio||'',
         };
         try{
-            const res=await fetch('/api/auth/register',{
+            const res=await fetch('http://localhost:1000/api/auth/register',{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify(body)

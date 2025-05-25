@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     // User Basic Info
     name: { type: String, required: true },
-    profile_pic :{type: String, required : false},
     // This should be the url and the actual file should be saved on google cloud or something
     email: { type: String, required: true },
     password: { type: String, required: true },
@@ -45,14 +44,6 @@ const UserSchema = new Schema({
         cleanliness_score: { type: Number, required: true }
     },
     group:{type:String,enum:["maleFreshman","femaleFreshman","H_maleFreshman","H_femaleFreshman","maleNF","femaleNF","H_maleNF","H_femaleNF"], required:true,index:true},
-    
-    profile_pic_info: {
-        url: { type: String },
-        filename: { type: String },
-        contentType: { type: String },
-        size: { type: Number },
-    }
-    
 }, 
 
 { timestamps: true });

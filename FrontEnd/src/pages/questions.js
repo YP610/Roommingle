@@ -30,8 +30,8 @@ const questions = [
         id: 'is_freshman',
         text: "Are you a freshman?",
         options: [
-            { label: "Yes", value: 'Freshman'},
-            { label: "No", value: 'NF'}
+            { label: "Yes", value: true},
+            { label: "No", value: false}
         ]
     },
     {
