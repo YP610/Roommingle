@@ -82,21 +82,20 @@ function updateUser(user){
 function tempClear(){
     userMap.clear();
 }
-function calculateClean(scores){
+function calculateClean(prof_questions){
+    const scores=[
+        prof_questions.q1,
+        prof_questions.q2,
+        prof_questions.q3,
+        prof_questions.q4,
+        prof_questions.q5
+    ]
     let sum=0;
-    let questions=5;
     for(let i=0;i<scores.length;i++){
-        let base=10;
-        base+=scores[i]
-        sum+=base;
+        sum+=scores[i];
     }
-    let average=sum/questions;
-    return average;
+    return sum;
 }
-
-
-
-
 
 module.exports={
     getGroupKey,

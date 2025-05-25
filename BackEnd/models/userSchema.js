@@ -10,11 +10,11 @@ const UserSchema = new Schema({
     number: { type: String, required: false },
     bio: {type:String, required: false, maxlength:250},
     prof_questions:{
-        q1: { type: String, enum: ["A", "B", "C", "D", "E"], required: false},
-        q2: { type: String, enum: ["A", "B", "C", "D", "E"], required: false},
-        q3: { type: String, enum: ["A", "B", "C", "D", "E"], required: false},
-        q4: { type: String, enum: ["A", "B", "C", "D", "E"], required: false},
-        q5: { type: String, enum: ["A", "B", "C", "D", "E"], required: false}
+        q1: { type: Number, enum: [2, 1, 0, -1, -2], required: true},
+        q2: { type: Number, enum: [2, 1, 0, -1, -2], required: true},
+        q3: { type: Number, enum: [2, 1, 0, -1, -2], required: true},
+        q4: { type: Number, enum: [2, 1, 0, -1, -2], required: true},
+        q5: { type: Number, enum: [2, 1, 0, -1, -2], required: true},
     },
     // Contact Information
     contact: {

@@ -50,7 +50,7 @@ const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const group=algo.getGroupKey({feed});
-        const cleanliness_score = calculateClean(cleanlinessRatings || []);
+        const cleanliness_score = calculateClean(prof_questions);
 
         // Merge score into nested livingConditions
         const updatedLivingConditions = {
