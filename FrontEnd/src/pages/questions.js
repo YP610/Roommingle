@@ -1,3 +1,6 @@
+import { useState } from 'react';
+
+
 const questions = [
     {
     id: 'name',
@@ -41,10 +44,10 @@ const questions = [
     },
     {
         id: 'is_honors',
-        text: "Do you want to live in CHC Residential Area (Only open to honors students",
+        text: "Do you want to live in CHC Residential Area (Only open to honors students)",
         options: [
-            { label: "Yes", value: 'H_'},
-            { label: "No", value: ''},
+            { label: "Yes", value:true},
+            { label: "No", value:false},
         ]
     },
     {
@@ -106,7 +109,7 @@ const questions = [
             { label: "Rarely if ever", value: -2}
         ]
     },
-    
+   
     {
     id: 'q3',
     text: 'Could you describe your weekly shower habits?',
@@ -150,9 +153,9 @@ const questions = [
     id: 'sleep_attitude',
     text: 'How would you describe your chronotype',
     options: [
-        { label: 'Early bird', value:  1 },
-        { label: 'Night owl', value:  -1 },
-        { label: 'Flexible', value:  0 }
+        { label: 'Early bird', value:  "earlyBird"},
+        { label: 'Night owl', value:  "nightOwl" },
+        { label: 'Flexible', value:  "flexible" }
     ]
     },
     {
@@ -168,5 +171,7 @@ const questions = [
     required: true
     }
 ];
-
 export default questions;
+
+
+//TODO: 1) Make it so that if user is an honors student, the website doesn't ask for their dorm ranking 2) Connect responses from frontend to groups in backend
