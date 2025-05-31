@@ -28,88 +28,42 @@ const Login = () => {
 };
 
     return ( 
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'linear-gradient(135deg, #ff4e50 0%, #f5f5f5 100%)' }}>
-            <div style={{
-                border: '2px solid #ccc',
-                borderRadius: '16px',
-                padding: '40px 32px',
-                background: '#fff',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
-                minWidth: '340px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-            }}>
-                <h1 style={{ marginBottom: '32px' }}>Roommingle</h1>
-                <input
-                    type="text"
-                    placeholder="Email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-
-                    style={{
-                        width: '100%',
-                        padding: '12px',
-                        marginBottom: '20px',
-                        borderRadius: '8px',
-                        border: '1px solid #ccc',
-                        fontSize: '16px'
-                    }}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-
-                    style={{
-                        width: '100%',
-                        padding: '12px',
-                        marginBottom: '20px',
-                        borderRadius: '8px',
-                        border: '1px solid #ccc',
-                        fontSize: '16px'
-                    }}
-                />
-                <button
-                    onClick={handleLogin}   // This is a test for now can become trigger to go to homepage I THINK
-                    style={{
-                        width: '100%',
-                        padding: '12px',
-                        borderRadius: '8px',
-                        border: 'none',
-                        background: '#ff4e50',
-                        color: '#fff',
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        marginBottom: '10px'
-
-                    }}>
-                        Login
-                    </button>
-                    <div style={{width: '100%', textAlign: 'center', fontSize: '14px', color: '#888'}}>
+        <div className="container-fluid d-flex justify-content-center align-items-center" style={{ background: 'linear-gradient(135deg, #ff4e50 0%, #881c1c 100%)', minHeight: '100vh' }}>
+            <div className="container-fluid w-25 border border-dark p-4" style={{ backgroundColor: 'white' }}>
+                <div className="row" style={{minWidth:"200px"}}>
+                    <div className="col-lg-12" style={{minWidth:"200px"}}>
+                        <h1 className="logo text-center" style={{ minWidth: "200px" }}>Roommingle</h1>
+                    </div>
+                </div>
+                <div className="row">
+                    <div class="form-floating">
+                        <input type="email" className="form-control" id="floatingInputGrid" placeholder="name@example.com"/>
+                            <label for="floatingInputGrid">Email address</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div class="form-floating">
+                        <input type="password" className="form-control" id="floatingInputGrid" placeholder="Password" />
+                        <label for="floatingInputGrid">Password</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <button onClick={handleLogin} className="btn btn-light w-100 text-light mb-2" style={{ background: '#ff4e50', color: '#fff' }}>
+                            Login
+                        </button>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12 text-center" style={{ color: '#888' }}>
                         Don't have an account?{' '}
-                        <button
-                            onClick={handleSignUp}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                color: '#ff4e50',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                padding: 0,
-                                textDecoration: 'underline'
-                            }}>
+                        <button onClick={handleSignUp} className="btn btn-light text-6" style={{ color: '#ff4e50', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px', textDecoration: 'underline' }}>
                             Sign up
                         </button>
-
                     </div>
-                    
+                </div>
             </div>
-        </div>
-    )
+        </div>)
 }
  
 export default Login;
