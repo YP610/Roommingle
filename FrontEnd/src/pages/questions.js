@@ -168,7 +168,7 @@ const questions = [
     id: 'bio',
     text: 'Bio (optional)', //might have to check for appropriateness
     type: 'text',
-    required: true
+    required: false
     }
 ];
 export default questions;

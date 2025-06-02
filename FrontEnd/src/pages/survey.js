@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import questions from './questions';
 
 
@@ -7,6 +7,8 @@ import questions from './questions';
 
 
 export default function Survey() {
+    const location = useLocation();
+    const navigate = useNavigate();
     // 1) user info
     const { state } = useLocation();
     // answers map: { [questionId]: 'A' | 'B' | ...}
@@ -16,6 +18,13 @@ export default function Survey() {
     );
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    // If someone lands directly on /survey with no state, send them back
+    useEffect(() => {
+        if(!email || !password) {
+            navigate('/signup');
+        }
+    }, [email, password, navigate]);
 
 
     const handleAnswer = (id, val) => {
@@ -27,6 +36,7 @@ export default function Survey() {
         e.preventDefault();
         setError('');
         setSuccess(' ');
+
        
         const allRequiredAnswered=questions
             .filter(q=>q.required||q.options)
@@ -35,6 +45,11 @@ export default function Survey() {
         if(!allRequiredAnswered||!answers.name||!email){
             setError("Not All Required Fields Completed");
             return;
+        }
+
+        if (!location.state) {
+            navigate('/signup');
+            return null;
         }
         const body = {
             name:answers.name,
@@ -73,7 +88,11 @@ export default function Survey() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Signup failed.");
-            setSuccess("User created successfully!");
+            setSuccess("User created successfully! Redirecting...");
+            
+            setTimeout(() => {
+                navigate('/home');
+            }, 500);
         } catch (err) {
             setError(err.message);
         }
