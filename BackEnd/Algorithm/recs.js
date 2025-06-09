@@ -4,8 +4,8 @@ const calculateClean=require('./sortingUsers');
 async function getGroup(groupKey, currentUserId) {
     const users = await User.find({ 
         group: groupKey,
-        _id: { $ne: currentUserId,
-               $nin: usersSeenIds 
+        _id: { $ne: currentUserId
+               //$nin: usersSeenIds 
             } 
     });
     return users;

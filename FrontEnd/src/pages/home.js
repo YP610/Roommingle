@@ -6,24 +6,22 @@ const Home = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    // If there's no toke in localStorage, redirect back to signup/login
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if(!token) {
-            navigate('/signup');
-        }
-    }, [navigate]);
-
     // Fetch 'potential roommates" once, on mount
     useEffect(() => {
+      // If there's no toke in localStorage, redirect back to signup/login
         const token = localStorage.getItem('token');
-        if(!token) return;
-        fetch('http://localhost:1000/api/userRoutes/Algorithm/recs', {
+        if(!token) { navigate('/signup'); return; }
+
+        const stored = JSON.parse(localStorage.getItem('user') || '{}');
+        const userId = stored?._id;
+        if (!userId) {navigate('/signup'); return; }
+
+        fetch(`http://localhost:1000/api/userRoutes/recs/${userId}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
         })
         .then(res => {
             if (!res.ok) throw new Error('Failed to load roommates');
@@ -37,7 +35,7 @@ const Home = () => {
             console.error(err);
             setError('Could not load roommates. Try again later.');
         })
-    }, []);
+    }, [navigate]);
 
     return (
     <div className="min-h-screen bg-gray-100 py-8">

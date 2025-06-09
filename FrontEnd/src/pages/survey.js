@@ -88,6 +88,15 @@ export default function Survey() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Signup failed.");
+
+            // Sore the token (and user) so Home can see it
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify({
+                _id: data._id,
+                name: data.name,
+                email: data.email
+            }));
+            
             setSuccess("User created successfully! Redirecting...");
             
             setTimeout(() => {
