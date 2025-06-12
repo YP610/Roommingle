@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './login.module.css';
 
 
 const Login = () => {
@@ -43,9 +44,9 @@ const Login = () => {
 };
 
     return (
-    <div className="login-container">
+    <div className={styles.loginContainer}>
       <h2>Welcome Back</h2>
-      <p className="subheading">Please log in to your account</p>
+      <p className={styles.subheading}>Please log in to your account</p>
 
       <form id="loginForm" onSubmit={handleLogin}>
         <label htmlFor="email">Email</label>
@@ -73,12 +74,12 @@ const Login = () => {
         <br />
 
 
-        <button type="submit" className="login-button">Login</button>
+        <button type="submit" className={styles.loginButton}>Login</button>
         {error && <p id="loginMessage" style={{ color: 'red' }}>{error}</p>}
       </form>
 
-      <p className="signup-prompt">Don’t have an account?</p>
-      <button onClick={() => navigate('/signup')} className="signup-button">Create Account</button>
+      <p className={styles.signupPrompt}>Don’t have an account?</p>
+      <button onClick={() => navigate('/signup')} className={styles.signupButton}>Create Account</button>
     </div>
   );
 };

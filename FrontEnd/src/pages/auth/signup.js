@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './login.module.css'
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -23,9 +24,9 @@ const SignUp = () => {
 
 
     return (
-    <div className="login-container">
+    <div className={styles.loginContainer}>
       <h2>Create Account</h2>
-      <p className="subheading">Sign up to get started</p>
+      <p className={styles.subheading}>Sign up to get started</p>
 
       <form onSubmit={handleSignUp}>
         <label htmlFor="email">Email</label>
@@ -64,12 +65,12 @@ const SignUp = () => {
         />
         <br />
 
-        <button type="submit" className="login-button">Sign Up</button>
+        <button type="submit" className={styles.loginButton}>Sign Up</button>
         {error && <p id="loginMessage" style={{ color: 'red' }}>{error}</p>}
       </form>
 
-      <p className="signup-prompt">Already have an account?</p>
-      <button onClick={() => navigate('/login')} className="signup-button">Log In</button>
+      <p className={styles.signupPrompt}>Already have an account?</p>
+      <button onClick={() => navigate('/login')} className={styles.signupButton}>Log In</button>
     </div>
   );
 };
