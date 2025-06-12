@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     // Handler to redirect to sign up page
     const handleSignUp = () => {
@@ -20,7 +22,17 @@ const Login = () => {
             });
             const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Login failed');
+
+        // save token and user
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify({
+            _id: data._id,
+            name: data.name,
+            email: data.email
+        }));
+
         console.log('✅ Logged in successfully:', data); // success message
+        navigate('/home');
     } catch (err) {
         console.log("Trying to login with:", email, password);
         console.log('❌ Could not log in:', err.message); // error message
@@ -37,16 +49,19 @@ const Login = () => {
                 </div>
                 <div className="row">
                     <div class="form-floating">
-                        <input type="email" className="form-control" id="floatingInputGrid" placeholder="name@example.com"/>
+                        <input type="email" className="form-control" id="floatingInputGrid" placeholder="name@example.com" value={email} onChange={e => setEmail(e.target.value)}/>
                             <label for="floatingInputGrid">Email address</label>
                     </div>
                 </div>
                 <div className="row">
                     <div class="form-floating">
-                        <input type="password" className="form-control" id="floatingInputGrid" placeholder="Password" />
+                        <input type="password" className="form-control" id="floatingInputGrid" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
                         <label for="floatingInputGrid">Password</label>
                     </div>
                 </div>
+
+                {error && <div style={{ color: 'red' }}>{error}</div>}
+                
                 <div className="row">
                     <div className="col-12">
                         <button onClick={handleLogin} className="btn btn-light w-100 text-light mb-2" style={{ background: '#ff4e50', color: '#fff' }}>
