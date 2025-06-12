@@ -71,7 +71,7 @@ const SignUp = () => {
       </form>
 
       <p className={styles.signupPrompt}>Already have an account?</p>
-      <button onClick={() => navigate('/login')} className={styles.signupButton}>Log In</button>
+      <button onClick={() => navigate('/')} className={styles.signupButton}>Log In</button>
     </div>
     </div>
   );
