@@ -24,7 +24,8 @@ const SignUp = () => {
 
 
     return (
-    <div className={styles.loginContainer}>
+    <div className={styles.wrapper}>
+      <div className={styles.loginContainer}>
       <h2>Create Account</h2>
       <p className={styles.subheading}>Sign up to get started</p>
 
@@ -71,6 +72,7 @@ const SignUp = () => {
 
       <p className={styles.signupPrompt}>Already have an account?</p>
       <button onClick={() => navigate('/login')} className={styles.signupButton}>Log In</button>
+    </div>
     </div>
   );
 };

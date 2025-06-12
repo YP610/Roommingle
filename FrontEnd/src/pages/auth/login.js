@@ -44,8 +44,9 @@ const Login = () => {
 };
 
     return (
-    <div className={styles.loginContainer}>
-      <h2>Welcome Back</h2>
+    <div className={styles.wrapper}>
+        <div className={styles.loginContainer}>
+        <h2>Welcome Back</h2>
       <p className={styles.subheading}>Please log in to your account</p>
 
       <form id="loginForm" onSubmit={handleLogin}>
@@ -80,6 +81,7 @@ const Login = () => {
 
       <p className={styles.signupPrompt}>Don’t have an account?</p>
       <button onClick={() => navigate('/signup')} className={styles.signupButton}>Create Account</button>
+    </div>
     </div>
   );
 };
