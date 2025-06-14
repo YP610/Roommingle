@@ -89,7 +89,7 @@ export default function Survey() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Signup failed.");
 
-            // Sore the token (and user) so Home can see it
+            // Store the token (and user) so Home can see it
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify({
                 _id: data._id,
@@ -106,67 +106,91 @@ export default function Survey() {
             setError(err.message);
         }
     };
-
-
     return (
-    <div className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-6 text-center">Complete Your Profile</h1>
+    <div className="container-fluid">
+        <div className = "container-fluid">
+            <div className="row">
+                <div className="col-1 col-md-2">
 
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-            {questions.map(q => (
-            <div key={q.id} className="flex flex-col">
-            <label htmlFor={q.id} className="mb-2 font-medium text-gray-700">
-                {q.text}
-                {q.required && <span className="text-red-500 ml-1">*</span>}
-            </label>
-
-
-            {q.type === 'text' ? (
-                <input
-                id={q.id}
-                type="text"
-                value={answers[q.id]}
-                onChange={e => handleAnswer(q.id, e.target.value)}
-                required={q.required}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-            ) : (
-                <div className="space-y-2">
-                {q.options.map(opt => (
-                    <label key={opt.value} className="inline-flex items-center">
-                    <input
-                        type="radio"
-                        name={q.id}
-                        value={opt.value}
-                        checked={answers[q.id] === opt.value}
-                        onChange={() => handleAnswer(q.id, opt.value)}
-                        required={q.required}
-                        className="form-radio text-blue-600"
-                    />
-                    <span className="ml-2">{opt.label}</span>
-                    </label>
-                ))}
                 </div>
-            )}
+                <div className="col-10 text-center col-md-8">
+                    <h1>
+                        Complete Your Profile
+                    </h1>
+                </div>
+                <div className="col-1 col-md-2">
+                    
+                </div>
             </div>
-        ))}
+            <div className="row">
 
-
-        {error && <p className="text-red-600">{error}</p>}
-        {success && <p className="text-green-600">{success}</p>}
-
-
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {questions.map(q => (
+                        <div key={q.id} className="flex flex-col mb-4">
+                            <label htmlFor={q.id} className="mb-2 font-medium text-gray-700">
+                                {q.text}
+                                {q.required && 
+                                <span className="text-red-500 ml-1">
+                                    *
+                                </span>}
+                            </label>
+                            {q.type === 'text' ? (
+                                <input
+                                    id={q.id}
+                                    type="text"
+                                    value={answers[q.id]}
+                                    onChange={e => handleAnswer(q.id, e.target.value)}
+                                    required={q.required}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                />
+                                ) : (
+                                    <div className="space-y-2">
+                                        {q.options.map
+                                            (opt => 
+                                                (
+                                                    <label key={opt.value} className="inline-flex items-center">
+                                                        <input
+                                                            type="radio"
+                                                            name={q.id}
+                                                            value={opt.value}
+                                                            checked={answers[q.id] === opt.value}
+                                                            onChange={() => handleAnswer(q.id, opt.value)}
+                                                            required={q.required}
+                                                            className="form-radio text-blue-600"
+                                                        />
+                                                        <span className="ml-2">
+                                                            {opt.label}
+                                                        </span>
+                                                    </label>
+                                                )
+                                            )
+                                        }
+                                    </div>
+                                )
+                            }
+                        </div>
+                    ))}
+                </form> 
+            </div>
+        </div>
+        {error && 
+            <p className="text-red-600">
+                {error}
+            </p>
+        }
+        {success && 
+            <p className="text-green-600">
+                {success}
+            </p>
+        }
         <button
             type="submit"
             className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
         >
             Submit
         </button>
-        </form>
     </div>
-    );
-}
+)}
 
 
 //TODO: 1) Make sure id's of questions are consistent with schema 2) Refine schema 3) Make sure schema and question format are consistent
