@@ -170,25 +170,25 @@ export default function Survey() {
                             }
                         </div>
                     ))}
+                    {error && 
+                    <p className="text-red-600">
+                        {error}
+                    </p>
+                    }
+                    {success && 
+                        <p className="text-green-600">
+                            {success}
+                        </p>
+                    }
+                    <button
+                        type="submit"
+                        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+                    >
+                        Submit
+                    </button>
                 </form> 
             </div>
         </div>
-        {error && 
-            <p className="text-red-600">
-                {error}
-            </p>
-        }
-        {success && 
-            <p className="text-green-600">
-                {success}
-            </p>
-        }
-        <button
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
-        >
-            Submit
-        </button>
     </div>
 )}
 
