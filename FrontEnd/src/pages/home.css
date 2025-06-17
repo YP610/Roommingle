@@ -1,0 +1,170 @@
+/* Home.css */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Quicksand:wght@400;500;600&display=swap');
+
+
+/* Reset */
+* {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+}
+body {
+ font-family: 'Quicksand', sans-serif;
+ background-color: #f7f7f7;
+ overflow-x: hidden;
+}
+
+
+/* Wrapper */
+.home-wrapper {
+ position: relative;
+ height: 100vh;
+ overflow: hidden;
+}
+
+
+/* Menu Button */
+.menu-button {
+ position: fixed;
+ top: 1rem;
+ left: 1rem;
+ font-size: 2rem;
+ background: transparent;
+ border: none;
+ cursor: pointer;
+ z-index: 1001;
+}
+
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 250px;
+ height: 100%;
+ background-color: #ffffff;
+ box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+ transform: translateX(-100%);
+ transition: transform 0.3s ease-in-out;
+ z-index: 1000;
+}
+.sidebar-overlay.open {
+ transform: translateX(0);
+}
+
+
+/* Sidebar Logo */
+.sidebar-logo {
+ font-family: 'Patrick Hand', cursive;
+ font-size: 1.75rem;
+ text-align: center;
+ margin: 2rem 0;
+ color: #333333;
+}
+
+
+/* Sidebar Content */
+.sidebar-content {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 0 1rem;
+}
+.profile-pic {
+ width: 80px;
+ height: 80px;
+ border-radius: 50%;
+ object-fit: cover;
+ margin-bottom: 1rem;
+}
+.sidebar-link {
+ width: 100%;
+ padding: 0.75rem 0;
+ text-align: center;
+ font-size: 1rem;
+ color: #555555;
+ background: none;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ transition: background-color 0.2s;
+ margin-bottom: 0.5rem;
+}
+.sidebar-link:hover {
+ background-color: #f0f0f0;
+}
+
+
+/* Feed Container: vertical scroll with snap */
+.feed-container {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ display: flex;
+ flex-direction: column;
+ overflow-y: scroll;
+ scroll-snap-type: y mandatory;
+ scroll-behavior: smooth;
+ transition: margin-left 0.3s ease-in-out;
+}
+.sidebar-overlay.open ~ .feed-container {
+ margin-left: 250px;
+}
+
+
+/* Tile: Full viewport height */
+.tile {
+ flex: 0 0 100%;
+ scroll-snap-align: start;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ padding: 2rem;
+ background-color: #ffffff;
+}
+.tile-content {
+ width: 100%;
+ max-width: 600px;
+ text-align: center;
+}
+
+
+/* Username */
+.username {
+ font-weight: 600;
+ font-size: 2rem;
+ color: #333333;
+ margin-bottom: 1rem;
+}
+
+
+/* Content Picture */
+.content-pic {
+ width: 100%;
+ max-height: 300px;
+ object-fit: cover;
+ border-radius: 8px;
+ margin-bottom: 1rem;
+}
+
+
+/* Caption */
+.caption {
+ font-size: 1rem;
+ color: #666666;
+ margin-top: 0.5rem;
+}
+
+
+/* Error Text */
+.error-text {
+ color: #c0392b;
+ font-size: 1rem;
+ text-align: center;
+ padding: 1rem;
+}

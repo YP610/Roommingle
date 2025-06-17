@@ -1,107 +1,92 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './home.css'; // ensure styles from home.html are ported here
+
 
 const Home = () => {
-    const [roommates, setRoommates] = useState([]);
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
+ const [roommates, setRoommates] = useState([]);
+ const [error, setError]       = useState('');
+ const [sidebarOpen, setSidebarOpen] = useState(false);
+ const navigate = useNavigate();
 
-    // Fetch 'potential roommates" once, on mount
-    useEffect(() => {
-      // If there's no toke in localStorage, redirect back to signup/login
-        const token = localStorage.getItem('token');
-        if(!token) { navigate('/signup'); return; }
 
-        const stored = JSON.parse(localStorage.getItem('user') || '{}');
-        const userId = stored?._id;
-        if (!userId) {navigate('/signup'); return; }
+ useEffect(() => {
+   const token = localStorage.getItem('token');
+   if (!token) return navigate('/signup');
 
-        fetch(`http://localhost:1000/api/userRoutes/recs/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        })
-        .then(res => {
-            if (!res.ok) throw new Error('Failed to load roommates');
-            return res.json();
-        })
-        .then(data => {
-            // data should be an array of user objects
-            setRoommates(data);
-        })
-        .catch(err => {
-            console.error(err);
-            setError('Could not load roommates. Try again later.');
-        })
-    }, [navigate]);
 
-    return (
-    <div className="min-h-screen bg-gray-100 py-8">
-      <h2 className="text-3xl font-bold text-center mb-6">Your Potential Roommates</h2>
+   const user    = JSON.parse(localStorage.getItem('user') || '{}');
+   const userId  = user?._id;
+   if (!userId) return navigate('/signup');
 
-      {error && (
-        <p className="text-red-600 text-center mb-4">{error}</p>
-      )}
 
-      {/* horizontally scrollable container */}
-      <div className="overflow-x-auto px-4">
-        <div className="flex space-x-6">
-          {roommates.map(rm => (
-            <div
-              key={rm._id}
-              className="min-w-[300px] bg-white rounded-lg shadow-md p-6 flex-shrink-0"
-            >
-              <h3 className="text-xl font-semibold mb-2">{rm.name}</h3>
-              {rm.bio && (
-                <p className="text-gray-600 mb-2">{rm.bio}</p>
-              )}
-              <ul className="text-sm text-gray-700 space-y-1 mb-3">
-                <li><strong>Gender:</strong> {rm.gender}</li>
-                <li>
-                  <strong>Freshman:</strong> {rm.is_freshman === 'Freshman' ? 'Yes' : 'No'}
-                </li>
-                <li>
-                  <strong>Cleanliness Score:</strong> {rm.livingConditions?.cleanliness_score ?? 'N/A'}
-                </li>
-                {/* add more fields as desired */}
-              </ul>
+   fetch(`http://localhost:1000/api/userRoutes/recs/${userId}`, {
+     headers: {
+       'Accept':        'application/json',
+       'Authorization': `Bearer ${token}`
+     }
+   })
+     .then(res => {
+       if (!res.ok) throw new Error(res.statusText);
+       return res.json();
+     })
+     .then(data => setRoommates(data))
+     .catch(() => setError('Could not load roommates.'));
+ }, [navigate]);
 
-              {/* Example “Contact” button (could be expanded) */}
-              {rm.contact?.number && (
-                <a
-                  href={`tel:${rm.contact.number}`}
-                  className="inline-block bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
-                >
-                  Call
-                </a>
-              )}
-            </div>
-          ))}
 
-          {/* Show a placeholder if no roommates are returned */}
-          {roommates.length === 0 && !error && (
-            <p className="text-gray-500">No matches found yet.</p>
-          )}
-        </div>
-      </div>
+ const toggleMenu = () => setSidebarOpen(o => !o);
 
-      {/* Optional: a footer or “logout” button */}
-      <div className="text-center mt-8">
-        <button
-          onClick={() => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            navigate('/');
-          }}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-        >
-          Log Out
-        </button>
-      </div>
-    </div>
-  );
+
+ return (
+   <div className="home-wrapper">
+     {/* Menu Button */}
+     <button className="menu-button" onClick={toggleMenu}>☰</button>
+
+
+     {/* Sidebar Overlay */}
+     <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`} id="sidebar">
+       <div className="sidebar-logo">ROOMMINGLE</div>
+       <div className="sidebar-content">
+         <img
+           src={roommates[0]?.profilePic || 'https://via.placeholder.com/80'}
+           alt="Profile Picture"
+           className="profile-pic"
+         />
+         <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
+         <button className="sidebar-link" onClick={() => navigate('/requests')}>Requests</button>
+         <button className="sidebar-link" onClick={() => {
+           localStorage.removeItem('token');
+           localStorage.removeItem('user');
+           navigate('/');
+         }}
+       >
+         Log Out
+       </button>
+       </div>
+     </div>
+
+
+     {/* Feed Container */}
+     <div className="feed-container" id="feedContainer">
+       {error && <p className="error-text">{error}</p>}
+       {roommates.map(rm => (
+         <div className="tile" key={rm._id}>
+           <div className="tile-content">
+             <p className="username">{rm.name}</p>
+             <img
+               src={rm.profilePic || 'https://via.placeholder.com/400x300'}
+               alt="Content"
+               className="content-pic"
+             />
+             {rm.bio && <p className="caption">{rm.bio}</p>}
+           </div>
+         </div>
+       ))}
+     </div>
+   </div>
+ );
 }
+
 
 export default Home;
