@@ -1,0 +1,171 @@
+* /* General Reset */
+/* General Reset */
+*/* General Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: flex-start; /* Align content to the left to make space for sidebar */
+    overflow: hidden;
+    background: linear-gradient(0deg,#d48383 , #881c1c);
+    color: #333;
+}
+
+/* Sidebar - Always Visible */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px; /* Sidebar width */
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    z-index: 99;
+}
+
+/* Roommingle Logo */
+.sidebar-logo {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff4d4d; /* Eye-catching color for the logo */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 40px; /* Space below the logo to push down other content */
+}
+
+/* Sidebar Content */
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Push down content to allow space for logo */
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.sidebar-link {
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    margin: 15px 0;
+    transition: color 0.3s ease;
+}
+
+.sidebar-link:hover {
+    color: #ff4d4d; /* Hover color for sidebar links */
+}
+
+/* Menu Button (Remove) */
+/* No need for menu button styling if sidebar is always visible */
+
+
+  /* Feed Container */
+  .feed-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    scroll-snap-type: x mandatory; /* Enables sticky scrolling */
+  }
+  
+  /* Each Tile */
+  .tile {
+    flex: 0 0 100vw; /* Each tile takes full viewport width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scroll-snap-align: center;
+  }
+  
+  .tile-content {
+    background: linear-gradient(0deg,#d48383 , #881c1c);
+    width: 90%; /* Increase width to cover more of the viewport */
+    max-width: 800px; /* Adjust max width as desired */
+    height: 90%; /* Adjust height to fit vertically with padding */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  
+  .username {
+    font-weight: bold;
+    color: #4e54c8;
+    margin-bottom: 15px;
+  }
+  
+  .content-pic {
+    width: 80%;
+    max-height: 300px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  
+  .caption {
+    color: white;
+    font-size: 1rem;
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+  
+  /* Navigation Arrows */
+  .nav-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .left-arrow {
+    left: 20px;
+  }
+  
+  .right-arrow {
+    right: 20px;
+  }
+  
+  .nav-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  .feed-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: scroll; /* Enable vertical scrolling */
+    scroll-snap-type: y mandatory; /* Enables vertical sticky scrolling */
+  }
+  
+  .tile {
+    flex: 0 0 100vh; /* Each tile takes full viewport height */
+    scroll-snap-align: start; /* Aligns each tile to the top */
+  }
+  
+  
