@@ -11,7 +11,7 @@
 }
 body {
  font-family: 'Quicksand', sans-serif;
- background-color: #f7f7f7;
+ background-color: #d14646;
  overflow-x: hidden;
 }
 
@@ -44,7 +44,7 @@ body {
  left: 0;
  width: 250px;
  height: 100%;
- background-color: #ffffff;
+ background-color: #000000;
  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
  transform: translateX(-100%);
  transition: transform 0.3s ease-in-out;
@@ -125,7 +125,7 @@ body {
  align-items: center;
  justify-content: center;
  padding: 2rem;
- background-color: #ffffff;
+ background-color: #cb4040;
 }
 .tile-content {
  width: 100%;

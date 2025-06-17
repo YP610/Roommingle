@@ -2,195 +2,200 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import questions from './questions';
 
-
-//TODO: 1) Make it so that if user is an honors student, the website doesn't ask for their dorm ranking 2) Connect responses from frontend to groups in backend
-
-
 export default function Survey() {
-    const location = useLocation();
-    const navigate = useNavigate();
-    // 1) user info
-    const { state } = useLocation();
-    // answers map: { [questionId]: 'A' | 'B' | ...}
-    const { email, password } = state || {};
-    const [answers, setAnswers] = useState(
-        questions.reduce((acc, q) => ({ ...acc, [q.id]: '' }), {})
-    );
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const { email, password } = state || {};
 
-    // If someone lands directly on /survey with no state, send them back
-    useEffect(() => {
-        if(!email || !password) {
-            navigate('/signup');
-        }
-    }, [email, password, navigate]);
+  // Redirect if accessed directly
+  useEffect(() => {
+    if (!email || !password) {
+      navigate('/signup');
+    }
+  }, [email, password, navigate]);
 
+  // Group questions into pages
+  const questionGroups = [
+    questions.slice(0, 4),    // Q1-4
+    questions.slice(4, 7),    // Q5-7
+    questions.slice(7, 10),   // Q8-10
+    questions.slice(10, 15),  // Q11-15
+    questions.slice(15, 18),  // Q16-18
+    questions.slice(18, 19)   // Q19
+  ];
+  const totalSteps = questionGroups.length;
+  const [step, setStep] = useState(1);
 
-    const handleAnswer = (id, val) => {
-        setAnswers(prev => ({...prev, [id]: val }));
+  // Initialize answers
+  const [answers, setAnswers] = useState(
+    questions.reduce((acc, q) => ({ ...acc, [q.id]: '' }), {})
+  );
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const handleAnswer = (id, val) => {
+    setAnswers(prev => ({ ...prev, [id]: val }));
+  };
+
+  // Proceed to next page after validating current group
+  const handleNext = () => {
+    const group = questionGroups[step - 1];
+    const allAnswered = group
+      .filter(q => q.required || q.options)
+      .every(q => answers[q.id] !== '' && answers[q.id] != null);
+
+    if (!allAnswered) {
+      setError('Please answer all required questions before proceeding.');
+      return;
+    }
+    setError('');
+    setStep(s => s + 1);
+  };
+
+  const handleBack = () => {
+    setError('');
+    setStep(s => s - 1);
+  };
+
+  // Submit the completed survey
+  const handleSubmit = async () => {
+    setError('');
+    setSuccess('');
+
+    // Validate all required answers
+    const allRequired = questions
+      .filter(q => q.required || q.options)
+      .every(q => answers[q.id] !== '' && answers[q.id] != null);
+    if (!allRequired) {
+      setError('Please complete all required fields before submitting.');
+      return;
+    }
+
+    // Build payload
+    const payload = {
+      name: answers.name,
+      email,
+      password,
+      prof_questions: {
+        q1: answers.q1,
+        q2: answers.q2,
+        q3: answers.q3,
+        q4: answers.q4,
+        q5: answers.q5
+      },
+      contact: {
+        number: answers.number || '',
+        snap: answers.snap || '',
+        insta: answers.insta || ''
+      },
+      feed: {
+        is_freshman: answers.is_freshman,
+        gender: answers.gender,
+        is_honors: answers.is_honors,
+        rank: [answers.dorm1, answers.dorm2, answers.dorm3]
+      },
+      livingConditions: {
+        sleep_attitude: answers.sleep_attitude,
+        major: answers.major
+      },
+      hobbies: answers.hobbies || '',
+      bio: answers.bio || ''
     };
 
+    try {
+      const res = await fetch('http://localhost:1000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Submission failed.');
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setError('');
-        setSuccess(' ');
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify({
+        _id: data._id,
+        name: data.name,
+        email: data.email
+      }));
 
-       
-        const allRequiredAnswered=questions
-            .filter(q=>q.required||q.options)
-            .every(q => answers[q.id] !== null && answers[q.id] !== '')
-       
-        if(!allRequiredAnswered||!answers.name||!email){
-            setError("Not All Required Fields Completed");
-            return;
-        }
+      setSuccess('Profile completed! Redirecting...');
+      setTimeout(() => navigate('/home'), 500);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
-        if (!location.state) {
-            navigate('/signup');
-            return null;
-        }
-        const body = {
-            name:answers.name,
-            email,
-            password,
-            prof_questions:{
-                q1:answers.q1,
-                q2:answers.q2,
-                q3:answers.q3,
-                q4:answers.q4,
-                q5:answers.q5
-            },
-            contact:{
-                number:answers.number||"",
-                snap:answers.snap||"",
-                insta:answers.insta||""
-            },
-            feed:{
-                is_freshman:answers.is_freshman,
-                gender:answers.gender,
-                is_honors:answers.is_honors,
-                rank:[answers.dorm1,answers.dorm2,answers.dorm3]
-            },
-            livingConditions:{
-                sleep_attitude:answers.sleep_attitude,
-                major:answers.major,
-            },
-            hobbies:answers.hobbies||'',
-            bio:answers.bio||'',
-        };
-        try{
-            const res=await fetch('http://localhost:1000/api/auth/register',{
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify(body)
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || "Signup failed.");
+  const currentQuestions = questionGroups[step - 1];
 
-            // Store the token (and user) so Home can see it
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify({
-                _id: data._id,
-                name: data.name,
-                email: data.email
-            }));
-            
-            setSuccess("User created successfully! Redirecting...");
-            
-            setTimeout(() => {
-                navigate('/home');
-            }, 500);
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-    return (
-    <div className="container-fluid">
-        <div className = "container-fluid">
-            <div className="row">
-                <div className="col-1 col-md-2">
+  return (
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-2xl font-semibold mb-4 text-center">Complete Your Profile</h1>
+      <div>
+        {currentQuestions.map(q => (
+          <div key={q.id} className="mb-6">
+            <label className="block mb-2 font-medium">
+              {q.text}
+              {q.required && <span className="text-red-500"> *</span>}
+            </label>
+            {q.type === 'text' ? (
+              <input
+                type="text"
+                value={answers[q.id]}
+                onChange={e => handleAnswer(q.id, e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              />
+            ) : (
+              <div className="space-y-2">
+                {q.options.map(opt => (
+                  <label key={opt.value} className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name={q.id}
+                      value={opt.value}
+                      checked={answers[q.id] === opt.value}
+                      onChange={() => handleAnswer(q.id, opt.value)}
+                      className="form-radio"
+                    />
+                    <span className="ml-2">{opt.label}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
 
-                </div>
-                <div className="col-10 text-center col-md-8">
-                    <h1>
-                        Complete Your Profile
-                    </h1>
-                </div>
-                <div className="col-1 col-md-2">
-                    
-                </div>
-            </div>
-            <div className="row">
+        {error && <p className="text-red-600 mb-4">{error}</p>}
+        {success && <p className="text-green-600 mb-4">{success}</p>}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {questions.map(q => (
-                        <div key={q.id} className="flex flex-col mb-4">
-                            <label htmlFor={q.id} className="mb-2 font-medium text-gray-700">
-                                {q.text}
-                                {q.required && 
-                                <span className="text-red-500 ml-1">
-                                    *
-                                </span>}
-                            </label>
-                            {q.type === 'text' ? (
-                                <input
-                                    id={q.id}
-                                    type="text"
-                                    value={answers[q.id]}
-                                    onChange={e => handleAnswer(q.id, e.target.value)}
-                                    required={q.required}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                />
-                                ) : (
-                                    <div className="space-y-2">
-                                        {q.options.map
-                                            (opt => 
-                                                (
-                                                    <label key={opt.value} className="inline-flex items-center">
-                                                        <input
-                                                            type="radio"
-                                                            name={q.id}
-                                                            value={opt.value}
-                                                            checked={answers[q.id] === opt.value}
-                                                            onChange={() => handleAnswer(q.id, opt.value)}
-                                                            required={q.required}
-                                                            className="form-radio text-blue-600"
-                                                        />
-                                                        <span className="ml-2">
-                                                            {opt.label}
-                                                        </span>
-                                                    </label>
-                                                )
-                                            )
-                                        }
-                                    </div>
-                                )
-                            }
-                        </div>
-                    ))}
-                    {error && 
-                    <p className="text-red-600">
-                        {error}
-                    </p>
-                    }
-                    {success && 
-                        <p className="text-green-600">
-                            {success}
-                        </p>
-                    }
-                    <button
-                        type="submit"
-                        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
-                    >
-                        Submit
-                    </button>
-                </form> 
-            </div>
+        <div className="flex justify-between">
+          {step > 1 ? (
+            <button
+              onClick={handleBack}
+              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Back
+            </button>
+          ) : (
+            <div />
+          )}
+
+          {step < totalSteps ? (
+            <button
+              onClick={handleNext}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              Submit
+            </button>
+          )}
         </div>
+      </div>
     </div>
-)}
-
-
-//TODO: 1) Make sure id's of questions are consistent with schema 2) Refine schema 3) Make sure schema and question format are consistent
+  );
+}
