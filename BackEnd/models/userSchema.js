@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
+const requestSchema = new mongoose.Schema({
+    from: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    date: { type: Date, default: Date.now },
+})
 const UserSchema = new Schema({
     // User Basic Info
     name: { type: String, required: true },
@@ -44,6 +49,24 @@ const UserSchema = new Schema({
         cleanliness_score: { type: Number, required: true }
     },
     group:{type:String,enum:["maleFreshman","femaleFreshman","H_maleFreshman","H_femaleFreshman","maleNF","femaleNF","H_maleNF","H_femaleNF"], required:true,index:true},
+
+    // Requests I've sent to others
+    requestsSent: {
+        type: [requestsSchema],
+        default: []
+    },
+
+    // Requests other users have sent to me
+    requestsReceived: {
+        type: [requestSchema],
+        default: []
+    },
+
+    // Matches (accepted)
+    matches: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        default: []
+    }
 }, 
 
 { timestamps: true });

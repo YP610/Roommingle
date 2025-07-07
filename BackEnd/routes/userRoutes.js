@@ -7,6 +7,8 @@ const {
     updateUser,
     getUserInfoByCategory,
     getRecommendations,
+    sendRequest,
+    respondRequest,
     
 } = require("../controllers/userController")
 const router = express.Router() //creates router
@@ -28,6 +30,12 @@ router.patch('/:id', requireAuth, updateUser)
 router.get('/:userId/category/:category',getUserInfoByCategory)
 
 router.get('/recs/:id',requireAuth,getRecommendations)
+
+// send a request To user: id
+router.post('/:id/request', requireAuth, sendRequest);
+
+// respond on a request FROM user :id
+router.post('/:id/respond', requireAuth, respondRequest);
 
 //exports router to server.js
 module.exports = router

@@ -216,6 +216,80 @@ const getRecommendations = async (req, res) => {
     }
 };
 
+const sendRequest = async (req, res) => {
+    const fromId = req.user._id     // set by requireAuth
+    const toId = req.params.id;
+
+    if (fromId.equals(toId)) {
+        return res.status(400).json({ error: "Can't request yourself" });
+    }
+
+    // Add to my 'requestsSent' and their 'requestsReceived'
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        await User.findByIdAndUpdate(fromId, {
+            $addToSet: { requestsSent: { from: toId } }
+        }, { session });
+
+        await User.findByIdAndUpdate(toId, {
+            $addToSet: { requestsReceived: { from: fromId } }
+        }, { session });
+
+        await session.commitTransaction();
+        res,json({ success: true });
+    } catch (err) {
+        await session.abortTransaction();
+        console.error(err);
+        res.status(500).json({ error: 'Failed to send request '});
+    } finally {
+        session.endSession();
+    }
+};
+
+// Accept or decline a received request
+const respondRequest = async (req, res) => {
+    const meId = req.user._id;
+    const fromId = req.params.id;
+    const { action } = req.body; //'accept' or 'decline'
+
+    if(!['accept','decline'].includes(action)) {
+        return res.status(400).json({error: 'Invalid action'});
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        // Remove the pending request
+        await User.findByIdAndUpdate(meId, {
+            $pull: { requestsReceived: { from: fromId } }
+        }, { session });
+
+        await User.findByIdAndUpdate(fromId, {
+            $pull: { requestsSent: { from: meId } }
+        }, { session });
+
+        if (action === 'accept') {
+            // Add each other to matches
+            await User.findByIdAndUpdate(meId, {
+                $addToSet: {matches: fromId }
+            }, { session });
+            await User.findByIdAndUpdate(fromId, {
+                $addToSet: { matches: meId }
+            }, { session });
+        }
+
+        await session.commitTransaction();
+        res.json({ success: true });
+    } catch (err) {
+        await session.abortTransaction();
+        console.error(err);
+        res.status(500).json({ error: 'Failed to respond to request'});
+    } finally {
+        session.endSession();
+    }
+};
+
 
 module.exports = {
     getUsers,
@@ -225,5 +299,7 @@ module.exports = {
     deleteUser,
     updateUser,
     getUserInfoByCategory,
-    getRecommendations
+    getRecommendations,
+    sendRequest,
+    respondRequest
 }
