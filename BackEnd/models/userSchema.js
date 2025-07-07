@@ -52,7 +52,7 @@ const UserSchema = new Schema({
 
     // Requests I've sent to others
     requestsSent: {
-        type: [requestsSchema],
+        type: [requestSchema],
         default: []
     },
 
