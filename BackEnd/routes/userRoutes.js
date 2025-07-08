@@ -1,3 +1,9 @@
+const multer = require('multer');
+const path = require('path');
+const { uploadProfilePic } = require("../controllers/userController");
+const { storage } = require('../config/cloudinary'); 
+const upload = multer({ storage });
+
 const express = require('express')
 const requireAuth = require('../MiddleWare/authMiddleware'); // Import middleware
 const {
@@ -36,6 +42,15 @@ router.post('/:id/request', requireAuth, sendRequest);
 
 // respond on a request FROM user :id
 router.post('/:id/respond', requireAuth, respondRequest);
+
+// Upload a profile picture
+// Upload profile picture
+router.post(
+  '/upload-profile-pic',
+  requireAuth,
+  upload.single('profilePic'),
+  uploadProfilePic
+);
 
 //exports router to server.js
 module.exports = router

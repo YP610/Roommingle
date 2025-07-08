@@ -1,6 +1,7 @@
 /*
 Contains functionality of all requests, so databaseRoutes simply has to call these functions (minimizes clutter in databaseRoutes.js)
 */
+const path = require('path');
 
 const User=require('../models/userSchema')
 const bcrypt = require('bcryptjs');
@@ -290,6 +291,24 @@ const respondRequest = async (req, res) => {
     }
 };
 
+const uploadProfilePic = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const profilePicUrl = req.file.path; // Cloudinary returns public URL in path
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: profilePicUrl },
+      { new: true }
+    );
+
+    res.status(200).json({ message: 'Profile picture updated', profilePic: user.profilePic });
+  } catch (err) {
+    res.status(500).json({ message: 'Error uploading profile picture' });
+  }
+};
+
+
 
 module.exports = {
     getUsers,
@@ -301,5 +320,6 @@ module.exports = {
     getUserInfoByCategory,
     getRecommendations,
     sendRequest,
-    respondRequest
-}
+    respondRequest,
+    uploadProfilePic,
+};

@@ -13,6 +13,7 @@ const UserSchema = new Schema({
     password: { type: String, required: true },
     number: { type: String, required: false },
     bio: {type:String, required: false, maxlength:250},
+    profilePic: { type: String },
     prof_questions:{
         q1: { type: Number, enum: [2, 1, 0, -1, -2], required: true},
         q2: { type: Number, enum: [2, 1, 0, -1, -2], required: true},

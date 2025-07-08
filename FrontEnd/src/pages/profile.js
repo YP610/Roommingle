@@ -83,8 +83,21 @@ const ProfilePage = () => {
                  key={rm._id}
                  className="bg-white rounded-lg shadow p-6 text-center w-full max-w-xs flex flex-col items-center"
                >
-                 <div className="w-24 h-24 bg-gray-200 rounded-full mb-4 overflow-hidden flex items-center justify-center">
-                   {/* <img src={rm.photoUrl} alt={rm.name} className="w-full h-full object-cover" /> */}
+                 <div>
+                  <div className="w-24 h-24 mb-2 flex items-center justify-center">
+  {rm.profilePic ? (
+    <img
+      src={rm.profilePic}
+      alt={rm.name}
+      className="match-profile-pic"
+    />
+  ) : (
+    <div className="match-fallback-pic">
+      <span className="initials">{rm.name?.toUpperCase()}</span>
+    </div>
+  )}
+</div>
+
                  </div>
                  <p className="font-medium text-lg mb-2">{rm.name}</p>
                  {/* optional bio snippet */}

@@ -1,0 +1,7 @@
+.profile-pic-preview {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+}

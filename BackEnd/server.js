@@ -1,4 +1,6 @@
 //imports required packages that we installed through the terminal
+const path = require('path');
+
 require('dotenv').config();
 const cors = require('cors');
 const express = require("express");
@@ -30,6 +32,9 @@ app.get("/", (req, res) => {
 // uses all the request handlers imported from students.js (must include /api/students route)
 app.use('/api/userRoutes', userRoutes)
 app.use('/api/auth',authRoutes);
+
+// profile picture upload
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //connect to mongodb
 connectDB()
