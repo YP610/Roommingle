@@ -5,6 +5,7 @@ import Survey from './pages/survey';
 import Home from './pages/home';
 import ProfilePage from './pages/profile';
 import EditProfile from './pages/editprofile';
+import RequestsPage from './pages/requests';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/requests" element={<RequestsPage />} />
       </Routes>
       
     </div>

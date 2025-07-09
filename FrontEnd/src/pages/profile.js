@@ -1,118 +1,118 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './profilecss.css'; // import your CSS or Tailwind styles
-
+import './profilecss.css'; // Ensure this CSS file exists and is imported
 
 const ProfilePage = () => {
- const navigate = useNavigate();
- const [roommates, setRoommates] = useState([]);
- const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+  const [matches, setMatches] = useState([]);
+  const [error, setError] = useState('');
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const stored = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = stored._id;
+    if (!token || !userId) {
+      navigate('/signup');
+      return;
+    }
 
- useEffect(() => {
-   const token = localStorage.getItem('token');
-   const stored = JSON.parse(localStorage.getItem('user') || '{}');
-   const userId = stored._id;
-   if (!token || !userId) {
-     navigate('/signup');
-     return;
-   }
+    // Fetch user profile (includes accepted matches array)
+    fetch(`http://localhost:1000/api/userRoutes/${userId}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to load profile');
+        return res.json();
+      })
+      .then(async data => {
+        setProfile(data);
+        const acceptedIds = data.matches || [];
+        // Fetch each accepted match's details
+        const matchPromises = acceptedIds.map(id =>
+          fetch(`http://localhost:1000/api/userRoutes/${id}`, {
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          }).then(res => {
+            if (!res.ok) throw new Error('Failed to load match');
+            return res.json();
+          })
+        );
+        const users = await Promise.all(matchPromises);
+        setMatches(users);
+      })
+      .catch(err => setError(err.message));
+  }, [navigate]);
 
+  const handleEdit = () => {
+    navigate('/edit-profile');
+  };
 
-   fetch(`http://localhost:1000/api/userRoutes/recs/${userId}`, {
-     headers: {
-       'Accept': 'application/json',
-       'Authorization': `Bearer ${token}`
-     }
-   })
-     .then(res => {
-       if (!res.ok) throw new Error(res.statusText);
-       return res.json();
-     })
-     .then(data => setRoommates(data))
-     .catch(() => setError('Could not load matches.'));
- }, [navigate]);
+  if (error) {
+    return (
+      <div className="profile-container">
+        <p className="error-text">{error}</p>
+      </div>
+    );
+  }
+  if (!profile) {
+    return (
+      <div className="profile-container">
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
 
+  return (
+    <div className="profile-container">
+      {/* Profile Header */}
+      <div className="profile-header">
+        <img
+          src={profile.profilePic || 'https://via.placeholder.com/150'}
+          alt="Profile"
+          className="profile-picture"
+        />
+        <h1 className="profile-name">{profile.name}</h1>
+        <p className="profile-bio">{profile.bio || ''}</p>
+        <button className="edit-button" onClick={handleEdit}>
+          Edit Profile
+        </button>
+      </div>
 
- // Placeholder navigate to edit profile
- const handleEdit = () => navigate('/edit-profile');
+      {/* Profile Stats */}
+      <div className="profile-stats">
+        <div>
+          <span className="stat-number">{matches.length}</span>
+          <span className="stat-label"> Matches</span>
+        </div>
+      </div>
 
-
- return (
-   <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-     {/* Container */}
-     <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-8">
-       {/* Header Section */}
-       <div className="flex flex-col items-center mb-12">
-         {/* Profile Photo */}
-         <div className="w-32 h-32 rounded-full bg-gray-300 overflow-hidden mb-6 flex items-center justify-center">
-           {/* <img src={profile.photoUrl} alt="Profile" className="w-full h-full object-cover" /> */}
-         </div>
-
-
-         {/* Name & Bio Space */}
-         <h1 className="text-4xl font-bold mb-4 text-center">Username</h1>
-         <div className="h-32 w-full max-w-md mb-6 flex items-center justify-center">
-           {/* blank space for bio, year, contacts */}
-         </div>
-
-
-         {/* Edit Button */}
-         <button
-           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-           onClick={handleEdit}
-         >
-           Edit Profile
-         </button>
-       </div>
-
-
-       {/* Divider */}
-       <hr className="mb-8" />
-
-
-       {/* Matches Grid */}
-       <section>
-         <h2 className="text-2xl font-semibold mb-6 text-center">Matches</h2>
-         {error ? (
-           <p className="text-red-600 text-center">{error}</p>
-         ) : (
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-items-center">
-             {roommates.map(rm => (
-               <div
-                 key={rm._id}
-                 className="bg-white rounded-lg shadow p-6 text-center w-full max-w-xs flex flex-col items-center"
-               >
-                 <div>
-                  <div className="w-24 h-24 mb-2 flex items-center justify-center">
-  {rm.profilePic ? (
-    <img
-      src={rm.profilePic}
-      alt={rm.name}
-      className="match-profile-pic"
-    />
-  ) : (
-    <div className="match-fallback-pic">
-      <span className="initials">{rm.name?.toUpperCase()}</span>
+      {/* Profile Matches Section: only accepted matches */}
+      <div className="profile-matches">
+        <h2>Matches</h2>
+        <div className="match-grid">
+          {matches.length > 0 ? (
+            matches.map(match => (
+              <div key={match._id} className="match">
+                <img
+                  src={match.profilePic || 'https://via.placeholder.com/300x200'}
+                  alt={match.name}
+                />
+                <p>{match.bio || match.name}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No matches yet.</p>
+          )}
+        </div>
+      </div>
     </div>
-  )}
-</div>
-
-                 </div>
-                 <p className="font-medium text-lg mb-2">{rm.name}</p>
-                 {/* optional bio snippet */}
-               </div>
-             ))}
-             {roommates.length === 0 && (
-               <p className="text-gray-500 col-span-full text-center">No matches yet.</p>
-             )}
-           </div>
-         )}
-       </section>
-     </div>
-   </div>
- );
-}
-
+  );
+};
 
 export default ProfilePage;

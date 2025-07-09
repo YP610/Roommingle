@@ -238,7 +238,7 @@ const sendRequest = async (req, res) => {
         }, { session });
 
         await session.commitTransaction();
-        res,json({ success: true });
+        res.json({ success: true });
     } catch (err) {
         await session.abortTransaction();
         console.error(err);
