@@ -3,71 +3,63 @@ import { useNavigate } from 'react-router-dom';
 import './home.css'; // ensure styles from home.html are ported here
 import { sendMatchRequest } from '../api/users';
 
-
-
-
 const Home = () => {
 const [roommates, setRoommates] = useState([]);
 const [error, setError]       = useState('');
 const [sidebarOpen, setSidebarOpen] = useState(false);
 const navigate = useNavigate();
 
-
-
-
 useEffect(() => {
   const token = localStorage.getItem('token');
   if (!token) return navigate('/signup');
-
-
-
 
   const user    = JSON.parse(localStorage.getItem('user') || '{}');
   const userId  = user?._id;
   if (!userId) return navigate('/signup');
 
+  const headers = {
+    'Accept': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+  // Fetch profile and recommendations concurrently
+  Promise.all([
+    fetch(`http://localhost:1000/api/userRoutes/${userId}`, { headers }),
+    fetch(`http://localhost:1000/api/userRoutes/recs/${userId}`, { headers })
+  ])
+    .then(async([profileRes, recsRes]) => {
+      if (!profileRes.ok) throw new error('Failed to load profile');
+      if (!recsRes.ok) throw new error('Failed to load recommendations');
+      const profileData = await profileRes.json();
+      const recsData = await recsRes.json();
 
+      //Exclude users already requested or matched
+      const requestedIds = (profileData.requestsSent || []).map(r => r.from);
+      const acceptedIds = profileData.matches || [];
+      const excludeSet = new Set([...requestedIds, ...acceptedIds, userId]);
 
-
-  fetch(`http://localhost:1000/api/userRoutes/recs/${userId}`, {
-    headers: {
-      'Accept':        'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  })
-    .then(res => {
-      if (!res.ok) throw new Error(res.statusText);
-      return res.json();
+      const filtered = recsData.filter(rm => !excludeSet.has(rm._id));
+      setRoommates(filtered);
     })
-    .then(data => setRoommates(data))
-    .catch(() => setError('Could not load roommates.'));
+    .catch(err => setError(err.message));
 }, [navigate]);
 
 
 const handleSendRequest = async (targetUserId) => {
  try {
    await sendMatchRequest(targetUserId);
+   setRoommates(prev => prev.filter(rm => rm._id !== targetUserId));
  } catch (err) {
    console.error(err);
    setError(err.message);
  }
 };
 
-
-
-
 const toggleMenu = () => setSidebarOpen(o => !o);
-
-
-
 
 return (
   <div className="home-wrapper">
     {/* Menu Button */}
     <button className="menu-button" onClick={toggleMenu}>☰</button>
-
-
-
 
     {/* Sidebar Overlay */}
     <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`} id="sidebar">
@@ -78,6 +70,7 @@ return (
           alt="Profile Picture"
           className="profile-pic"
         />
+        <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
         <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
         <button className="sidebar-link" onClick={() => navigate('/requests')}>Requests</button>
         <button className="sidebar-link" onClick={() => {
@@ -90,9 +83,6 @@ return (
       </button>
       </div>
     </div>
-
-
-
 
     {/* Feed Container */}
     <div className="feed-container" id="feedContainer">
@@ -115,8 +105,5 @@ return (
   </div>
 );
 }
-
-
-
 
 export default Home;

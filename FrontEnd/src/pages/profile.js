@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './profilecss.css'; // Ensure this CSS file exists and is imported
 
 const ProfilePage = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toggleMenu = () => setSidebarOpen(open => !open);
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [matches, setMatches] = useState([]);
@@ -69,47 +71,90 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="profile-container">
-      {/* Profile Header */}
-      <div className="profile-header">
-        <img
-          src={profile.profilePic || 'https://via.placeholder.com/150'}
-          alt="Profile"
-          className="profile-picture"
-        />
-        <h1 className="profile-name">{profile.name}</h1>
-        <p className="profile-bio">{profile.bio || ''}</p>
-        <button className="edit-button" onClick={handleEdit}>
-          Edit Profile
-        </button>
-      </div>
+    <div className="home-wrapper">
+      {/* Toggle Menu Button */}
+      <button className="menu-button" onClick={toggleMenu}>☰</button>
 
-      {/* Profile Stats */}
-      <div className="profile-stats">
-        <div>
-          <span className="stat-number">{matches.length}</span>
-          <span className="stat-label"> Matches</span>
-        </div>
-      </div>
-
-      {/* Profile Matches Section: only accepted matches */}
-      <div className="profile-matches">
-        <h2>Matches</h2>
-        <div className="match-grid">
-          {matches.length > 0 ? (
-            matches.map(match => (
-              <div key={match._id} className="match">
-                <img
-                  src={match.profilePic || 'https://via.placeholder.com/300x200'}
-                  alt={match.name}
-                />
-                <p>{match.bio || match.name}</p>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-500">No matches yet.</p>
+      {/* Sidebar */}
+      <div className={`sidebar-overlay${sidebarOpen ? ' open' : ''}`}>  
+        <div className="sidebar-logo">ROOMMINGLE</div>
+        <div className="sidebar-content">
+          {profile && (
+            <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
+              <img
+                src={profile.profilePic || 'https://via.placeholder.com/150'}
+                alt={profile.name}
+                className="profile-pic"
+              />
+            </div>
           )}
+          <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
+          <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
+          <button className="sidebar-link" onClick={() => navigate('/requests')}>Requests</button>
+          <button className="sidebar-link" onClick={() => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          navigate('/');
+        }}
+      >
+        Log Out
+      </button>
         </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="feed-container">
+        {error ? (
+          <div className="profile-container">
+            <p className="error-text">{error}</p>
+          </div>
+        ) : (
+          profile && (
+            <div className="profile-container">
+              {/* Profile Header */}
+              <div className="profile-header">
+                <img
+                  src={profile.profilePic || 'https://via.placeholder.com/150'}
+                  alt="Profile"
+                  className="profile-picture"
+                />
+                <h1 className="profile-name">{profile.name}</h1>
+                <p className="profile-bio">{profile.bio || ''}</p>
+                <button className="edit-button" onClick={() => navigate('/edit-profile')}>
+                  Edit Profile
+                </button>
+              </div>
+
+              {/* Stats */}
+              <div className="profile-stats">
+                <div>
+                  <span className="stat-number">{matches.length}</span>
+                  <span className="stat-label"> Matches</span>
+                </div>
+              </div>
+
+              {/* Matches Grid */}
+              <div className="profile-matches">
+                <h2>Matches</h2>
+                <div className="match-grid">
+                  {matches.length > 0 ? (
+                    matches.map(match => (
+                      <div key={match._id} className="match">
+                        <img
+                          src={match.profilePic || 'https://via.placeholder.com/300x200'}
+                          alt={match.name}
+                        />
+                        <p>{match.bio || match.name}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500">No matches yet.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        )}
       </div>
     </div>
   );
