@@ -8,12 +8,13 @@ const EditProfile = () => {
   const [preview, setPreview] = useState('');
   const [uploading, setUploading] = useState(false);
   const [user] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
+  const DEFAULT_AVATAR = 'https://res.cloudinary.com/<YOUR_CLOUD_NAME>/image/upload/v1234567890/roommingle_profiles/default_avatar.png';
 
   useEffect(() => {
     if (!user || !user._id) {
       navigate('/signup');
     } else {
-      setPreview(user.profilePic || '');
+      setPreview(user.profilePic || DEFAULT_AVATAR);
     }
   }, [user, navigate]);
 

@@ -51,10 +51,6 @@ const ProfilePage = () => {
       .catch(err => setError(err.message));
   }, [navigate]);
 
-  const handleEdit = () => {
-    navigate('/edit-profile');
-  };
-
   if (error) {
     return (
       <div className="profile-container">
