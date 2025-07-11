@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './profilecss.css'; // Ensure this CSS file exists and is imported
+import { defaultAvatar } from "../config"; // adjust path if needed
+
 
 const ProfilePage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -9,6 +11,9 @@ const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState('');
+  //console.log("Default avatar from VITE:", import.meta.env.VITE_DEFAULT_AVATAR_URL);
+
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -78,7 +83,7 @@ const ProfilePage = () => {
           {profile && (
             <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
               <img
-                src={profile.profilePic || 'https://via.placeholder.com/150'}
+                src={profile.profilePic || defaultAvatar}
                 alt={profile.name}
                 className="profile-pic"
               />
@@ -110,7 +115,7 @@ const ProfilePage = () => {
               {/* Profile Header */}
               <div className="profile-header">
                 <img
-                  src={profile.profilePic || 'https://via.placeholder.com/150'}
+                  src={profile.profilePic || defaultAvatar}
                   alt="Profile"
                   className="profile-picture"
                 />
@@ -137,7 +142,7 @@ const ProfilePage = () => {
                     matches.map(match => (
                       <div key={match._id} className="match">
                         <img
-                          src={match.profilePic || 'https://via.placeholder.com/300x200'}
+                          src={match.profilePic || defaultAvatar}
                           alt={match.name}
                         />
                         <p>{match.bio || match.name}</p>

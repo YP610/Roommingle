@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './home.css'; // ensure styles from home.html are ported here
 import { sendMatchRequest } from '../api/users';
+import { defaultAvatar } from "../config"; // adjust path if needed
+
 
 const Home = () => {
   const [profile, setProfile] = useState(null);
@@ -9,6 +11,8 @@ const Home = () => {
   const [error, setError]       = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -70,7 +74,7 @@ const Home = () => {
         <div className="sidebar-logo">ROOMMINGLE</div>
         <div className="sidebar-content">
           <img
-            src={profile.profilePic || 'https://via.placeholder.com/80'}
+            src={profile.profilePic || defaultAvatar}
             alt="Profile Picture"
             className="profile-pic"
           />
@@ -96,7 +100,7 @@ const Home = () => {
             <div className="tile-content">
               <p className="username">{rm.name}</p>
               <img
-                src={rm.profilePic || 'https://via.placeholder.com/400x300'}
+                src={rm.profilePic || defaultAvatar}
                 alt="Content"
                 className="content-pic"
               />

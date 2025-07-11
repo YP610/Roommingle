@@ -61,6 +61,8 @@ const registerUser = async (req, res) => {
             ...livingConditions,
             cleanliness_score
         };
+        const DEFAULT_AVATAR = process.env.DEFAULT_AVATAR_URL;
+
 
         // Create new user
         const user = await User.create({
@@ -73,7 +75,8 @@ const registerUser = async (req, res) => {
             feed,
             hobbies,
             livingConditions: updatedLivingConditions,
-            group
+            group,
+            profilePic: DEFAULT_AVATAR,
         });
 
         // Send token & user data
