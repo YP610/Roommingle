@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { respondMatchRequest } from '../api/users';
 
-export default function RequestsPage() {
+export default function NotificationsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleMenu = () => setSidebarOpen(open => !open);
   const [requests, setRequests] = useState([]);
@@ -75,7 +75,7 @@ export default function RequestsPage() {
           {/* Optionally display small user photo */}
           <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
           <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
-          <button className="sidebar-link" onClick={() => navigate('/requests')}>Requests</button>
+          <button className="sidebar-link" onClick={() => navigate('/notifications')}>Notifications</button>
           <button className="sidebar-link" onClick={() => {
           localStorage.removeItem('token');
           localStorage.removeItem('user');

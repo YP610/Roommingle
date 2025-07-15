@@ -80,7 +80,7 @@ const Home = () => {
           />
           <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
           <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
-          <button className="sidebar-link" onClick={() => navigate('/requests')}>Requests</button>
+          <button className="sidebar-link" onClick={() => navigate('/notifications')}>Notifications</button>
           <button className="sidebar-link" onClick={() => {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
