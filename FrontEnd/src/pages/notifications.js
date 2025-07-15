@@ -102,7 +102,7 @@ export default function NotificationsPage() {
                     <img
                       src={user.profilePic || 'https://via.placeholder.com/150'}
                       alt={user.name}
-                      className="w-full h-full object-cover"
+                      className="profile-pic"
                     />
                   </div>
                   <h2 className="text-xl font-semibold mb-2">{user.name}</h2>
