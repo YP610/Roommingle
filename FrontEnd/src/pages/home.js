@@ -4,14 +4,12 @@ import './home.css'; // ensure styles from home.html are ported here
 import { sendMatchRequest } from '../api/users';
 import { defaultAvatar } from "../config"; // adjust path if needed
 
-
 const Home = () => {
   const [profile, setProfile] = useState(null);
   const [roommates, setRoommates] = useState([]);
   const [error, setError]       = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-
 
 
   useEffect(() => {
@@ -66,8 +64,6 @@ const Home = () => {
 
   return (
       <div className="container-fluid">
-
-
 
       {/* Menu Button */}
       <button className="menu-button" onClick={toggleMenu}>☰</button>
@@ -170,7 +166,7 @@ const Home = () => {
                                                     <div className="row">
                                                         <div className="col-12">
                                                             <h1 className="text-left ms-3 mt-1 fw-bolder text-dark">
-                                                                {rm.name}, {rm.livingconditions.major}
+                                                                {rm.name}, {rm.livingConditions.major}
                                                             </h1>
                                                         </div>
                                                     </div>
@@ -191,12 +187,12 @@ const Home = () => {
                                                     </div>
                                                     <div className="row">
                                                         <h3 className="fw-bolder text-center">
-                                                            Sleep Attitude IMG : {rm.livingconditions.sleep_attitude}
+                                                            Sleep Attitude IMG : {rm.livingConditions.sleep_attitude}
                                                         </h3>
                                                     </div>
                                                     <div className="row">
                                                         <h3 className="fw-bolder text-center">
-                                                            Major : {rm.livingconditions.major}
+                                                            Major : {rm.livingConditions.major}
                                                         </h3>
                                                     </div>
                                                     <div className="row">
@@ -279,9 +275,6 @@ const Home = () => {
                     </div>
                 </div>
             ))}
-
-
-          
       </div>
    </div>
   );
