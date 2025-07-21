@@ -29,7 +29,7 @@ const UserSchema = new Schema({
 
     // Feed Information
     feed: {
-        is_freshman: { type: Boolean, required: true },
+        year: { type: String, enum: ["Freshman", "Sophomore", "Junior", "Senior"], required: true },
         gender: { type: String, enum: ["male", "female"], required: true },
         is_honors: { type: Boolean, required: true },
         rank: {
@@ -45,7 +45,7 @@ const UserSchema = new Schema({
     hobbies: { type: String, required: false },
 
     livingConditions: {
-        sleep_attitude: { type: String,enum:["earlyBird","nightOwl","flexible"], required: true },
+        sleep_attitude: { type: String,enum:["Early Bird","Night Owl","Flexible"], required: true },
         major: { type: String, required: true },
         cleanliness_score: { type: Number, required: true }
     },

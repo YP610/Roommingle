@@ -27,11 +27,13 @@ const questions = [
     required: false
     },
     {
-        id: 'is_freshman',
-        text: "Are you a freshman?",
+        id: 'year',
+        text: "What year are you entering?",
         options: [
-            { label: "Yes", value: true},
-            { label: "No", value: false}
+            { label: "Freshman", value: "Freshman"},
+            { label: "Sophomore", value: "Sophomore"},
+            { label: "Junior", value: "Junior"},
+            { label: "Senior", value: "Senior"},
         ]
     },
     {
@@ -153,9 +155,9 @@ const questions = [
     id: 'sleep_attitude',
     text: 'How would you describe your chronotype',
     options: [
-        { label: 'Early bird', value:  "earlyBird"},
-        { label: 'Night owl', value:  "nightOwl" },
-        { label: 'Flexible', value:  "flexible" }
+        { label: 'Early bird', value:  "Early Bird"},
+        { label: 'Night owl', value:  "Night Owl" },
+        { label: 'Flexible', value:  "Flexible" }
     ]
     },
     {

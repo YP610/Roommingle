@@ -12,14 +12,14 @@ const userMap = new Map([
 
 function getGroupKey(user){
     const gender=user.feed.gender==="male"?"male":"female";
-    const freshman=user.feed.is_freshman;
+    const grade=user.feed.year;
     const honors=user.feed.is_honors;
 
     let groupKey;
 
 
     if(!honors){
-        if(!freshman){
+        if(grade=="Sophomore" || grade=="Junior" || grade=="Senior"){
             if(gender==="male"){
                 groupKey="maleNF";
             }
@@ -34,7 +34,7 @@ function getGroupKey(user){
             groupKey="femaleFreshman";
         }
     }
-    else if(!freshman){
+    else if(grade=="Sophomore" || grade=="Junior" || grade=="Senior"){
         if(gender==="male"){
             groupKey="H_maleNF";
         }

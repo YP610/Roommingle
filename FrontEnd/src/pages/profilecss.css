@@ -7,7 +7,7 @@
   box-sizing: border-box;
 }
 
-.profile-container {
+.profile-page-container {
   width: 100%;
   max-width: 900px;
   background-color: white;
@@ -18,12 +18,12 @@
   margin: 2rem auto;
 }
 
-.profile-header {
+.profile-page-header {
   position: relative;
   padding: 1rem 0;
 }
 
-.profile-picture {
+.profile-page-picture {
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -32,12 +32,12 @@
   display: block;
 }
 
-.profile-name {
+.profile-page-name {
   font-size: 24px;
   margin-top: 10px;
 }
 
-.profile-bio {
+.profile-page-bio {
   color: #777;
   font-size: 16px;
   margin-top: 8px;

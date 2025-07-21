@@ -89,7 +89,7 @@ export default function Survey() {
         insta: answers.insta || ''
       },
       feed: {
-        is_freshman: answers.is_freshman,
+        year: answers.year,
         gender: answers.gender,
         is_honors: answers.is_honors,
         rank: [answers.dorm1, answers.dorm2, answers.dorm3]

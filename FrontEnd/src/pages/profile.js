@@ -73,14 +73,14 @@ const ProfilePage = () => {
 
   if (error) {
     return (
-      <div className="profile-container">
+      <div className="profile-page-container">
         <p className="error-text">{error}</p>
       </div>
     );
   }
   if (!profile) {
     return (
-      <div className="profile-container">
+      <div className="profile-page-container">
         <p>Loading profile...</p>
       </div>
     );
@@ -121,7 +121,7 @@ const ProfilePage = () => {
             <img
               src={profile.profilePic || defaultAvatar}
               alt={profile.name}
-              className="profile-pic"
+              className="profile-page-pic"
             />
           </div>
           <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
@@ -141,17 +141,17 @@ const ProfilePage = () => {
 
       {/* Main Content */}
       <div className="feed-container">
-        <div className="profile-container">
+        <div className="profile-page-container">
           
           {/* Profile Header */}
-          <div className="profile-header">
+          <div className="profile-page-header">
             <img
               src={profile.profilePic || defaultAvatar}
               alt={profile.name}
-              className="profile-picture"
+              className="profile-page-picture"
             />
-            <h1 className="profile-name">{profile.name}</h1>
-            <p className="profile-bio">{profile.bio || ''}</p>
+            <h1 className="profile-page-name">{profile.name}</h1>
+            <p className="profile-page-bio">{profile.bio || ''}</p>
             <button
               className="edit-button"
               onClick={() => navigate('/edit-profile')}
@@ -186,7 +186,7 @@ const ProfilePage = () => {
                       <img
                         src={user.profilePic || defaultAvatar}
                         alt={user.name}
-                        className="profile-pic"
+                        className="profile-page-pic"
                       />
                       <p>{user.bio || user.name}</p>
                     </div>
@@ -207,7 +207,7 @@ const ProfilePage = () => {
                     <img
                       src={user.profilePic || 'https://via.placeholder.com/150'}
                       alt={user.name}
-                      className="profile-pic"
+                      className="profile-page-pic"
                     />
                   </div>
                   <h2 className="text-xl font-semibold mb-2">{user.name}</h2>
