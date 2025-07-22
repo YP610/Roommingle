@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { respondMatchRequest } from '../api/users';
+import { defaultAvatar } from '../config';
+
 
 export default function NotificationsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleMenu = () => setSidebarOpen(open => !open);
+  const [profile, setProfile] = useState(null);
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -17,6 +20,8 @@ export default function NotificationsPage() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (!user._id) return navigate('/signup');
 
+    setError('');
+
     fetch(`http://localhost:1000/api/userRoutes/${user._id}`, {
       headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
     })
@@ -25,7 +30,12 @@ export default function NotificationsPage() {
         return res.json();
       })
       .then(profile => {
-        const incoming = profile.requestsReceived || [];
+        setProfile(profile);
+        const incoming = profile?.requestsReceived || [];
+        if (incoming.length===0) {
+          setRequests([]);
+          return;
+        }
         return Promise.all(
           incoming.map(req =>
             fetch(`http://localhost:1000/api/userRoutes/${req.from}`, {
@@ -37,9 +47,23 @@ export default function NotificationsPage() {
           )
         );
       })
-      .then(users => setRequests(users))
-      .catch(err => setError(err.message));
+      .then(users => {
+        if (users) setRequests(users);
+        setError('');
+      })
+      .catch(err => {
+        console.error(err);
+        setError(err.message);
+      });
   }, [navigate]);
+
+  if(!profile) {
+    return (
+      <div className="profile-page-container">
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
 
   // Accept or decline handler
   const handleRespond = async (userId, action) => {
@@ -72,7 +96,11 @@ export default function NotificationsPage() {
       <div className={`sidebar-overlay${sidebarOpen ? ' open' : ''}`}>  
         <div className="sidebar-logo">ROOMMINGLE</div>
         <div className="sidebar-content">
-          {/* Optionally display small user photo */}
+          <img
+            src={profile?.profilePic || defaultAvatar}
+            alt="Profile"
+            className="profile-pic"
+          />
           <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
           <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
           <button className="sidebar-link" onClick={() => navigate('/notifications')}>Notifications</button>

@@ -108,50 +108,50 @@ const ProfilePage = () => {
     }
   };
 
-    return (
-    <div className="home-wrapper">
-      {/* Toggle Menu Button */}
-      <button className="menu-button" onClick={toggleMenu}>☰</button>
+return (
+  <div className="home-wrapper">
+    {/* Menu Button */}
+    <button className="menu-button" onClick={toggleMenu}>☰</button>
 
-      {/* Sidebar */}
-      <div className={`sidebar-overlay${sidebarOpen ? ' open' : ''}`}>
-        <div className="sidebar-logo">ROOMMINGLE</div>
-        <div className="sidebar-content">
-          <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
-            <img
-              src={profile.profilePic || defaultAvatar}
-              alt={profile.name}
-              className="profile-page-pic"
-            />
-          </div>
-          <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
-          <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
-          <button className="sidebar-link" onClick={() => navigate('/notifications')}>Notifications</button>
-          <button
-            className="sidebar-link"
-            onClick={() => {
-              localStorage.clear();
-              navigate('/');
-            }}
-          >
-            Log Out
-          </button>
+    {/* Sidebar */}
+    <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`}>
+      <div className="sidebar-logo">ROOMMINGLE</div>
+      <div className="sidebar-content">
+        <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
+          <img
+            src={profile.profilePic || defaultAvatar}
+            alt="Profile"
+            className="profile-pic"
+          />
         </div>
+        <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
+        <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
+        <button className="sidebar-link" onClick={() => navigate('/notifications')}>Notifications</button>
+        <button
+          className="sidebar-link"
+          onClick={() => {
+            localStorage.clear();
+            navigate('/');
+          }}
+        >
+          Log Out
+        </button>
       </div>
+    </div>
 
-      {/* Main Content */}
-      <div className="feed-container">
-        <div className="profile-page-container">
-          
-          {/* Profile Header */}
-          <div className="profile-page-header">
-            <img
-              src={profile.profilePic || defaultAvatar}
-              alt={profile.name}
-              className="profile-page-picture"
-            />
-            <h1 className="profile-page-name">{profile.name}</h1>
-            <p className="profile-page-bio">{profile.bio || ''}</p>
+    {/* Main Content */}
+    <div className="feed-container">
+      <div className="profile-page-container">
+        {/* Profile Header */}
+        <div className="profile-header">
+          <img
+            src={profile.profilePic || defaultAvatar}
+            alt={profile.name}
+            className="profile-picture"
+          />
+          <div className="profile-info">
+            <h1 className="profile-name">{profile.name}</h1>
+            <p className="profile-bio">{profile.bio || ''}</p>
             <button
               className="edit-button"
               onClick={() => navigate('/edit-profile')}
@@ -159,85 +159,193 @@ const ProfilePage = () => {
               Edit Profile
             </button>
           </div>
+        </div>
 
-          {/* Tabs */}
-          <div className="profile-tabs">
-            <button
-              className={`tab-button ${activeTab === 'matches' ? 'active' : ''}`}
-              onClick={() => setActiveTab('matches')}
-            >
-              Matches
-            </button>
-            <button
-              className={`tab-button ${activeTab === 'requests' ? 'active' : ''}`}
-              onClick={() => setActiveTab('requests')}
-            >
-              Requests
-            </button>
-          </div>
+        {/* Tabs */}
+        <div className="profile-tabs">
+          <button
+            className={`tab-button ${activeTab === 'matches' ? 'active' : ''}`}
+            onClick={() => setActiveTab('matches')}
+          >
+            Matches
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'requests' ? 'active' : ''}`}
+            onClick={() => setActiveTab('requests')}
+          >
+            Requests
+          </button>
+        </div>
 
-          {/* Tab Content */}
-          <div className="tab-content">
-            {activeTab === 'matches' ? (
-              <div className="match-grid">
-                {matches.length > 0 ? (
-                  matches.map(user => (
-                    <div key={user._id} className="match">
-                      <img
-                        src={user.profilePic || defaultAvatar}
-                        alt={user.name}
-                        className="profile-page-pic"
-                      />
-                      <p>{user.bio || user.name}</p>
+        {/* Tab Content */}
+        <div className="tab-content">
+          {activeTab === 'matches' ? (
+            <div className="matches-container">
+              {matches.length > 0 ? (
+                <div className="matches-grid">
+                  {matches.map(user => (
+                    <div className="match-card" key={user._id}>
+                      <div id={`match-carousel-${user._id}`} className="carousel slide">
+                        <div className="carousel-inner">
+                          {/* Profile View */}
+                          <div className="carousel-item active">
+                            <div className="profile-view">
+                              <div className="profile-header">
+                                <img
+                                  src={user.profilePic || defaultAvatar}
+                                  alt="Profile"
+                                  className="profile-image"
+                                />
+                                <div className="profile-info">
+                                  <h2 className="profile-name">{user.name}</h2>
+                                  {user.feed?.year && <p className="profile-year">Year: {user.feed.year}</p>}
+                                  {user.livingConditions?.major && (
+                                    <p className="profile-major">Major: {user.livingConditions.major}</p>
+                                  )}
+                                  {user.bio && <p className="profile-bio">{user.bio}</p>}
+                                </div>
+                              </div>
+                              {user.number ? <p>Phone: {user.number}</p> : ''}
+                              {user.contact.insta ? <p>Instagram: {user.contact.insta}</p> : ''}
+                              {user.contact.snap ? <p>Snapchat: {user.contact.snap}</p> : ''}
+                            </div>
+                          </div>
+                          
+                          {/* Details View */}
+                          <div className="carousel-item">
+                            <div className="details-view">
+                              <h3 className="detail-title">Living Preferences</h3>
+                              <div className="detail-item">
+                                <span className="detail-label">Sleep Schedule:</span>
+                                <span className="detail-value">{user.livingConditions?.sleep_attitude || 'Not specified'}</span>
+                              </div>
+                              <div className="detail-item">
+                                <span className="detail-label">Year:</span>
+                                <span className="detail-value">{user.feed?.year || 'Not specified'}</span>
+                              </div>
+                              <div className="detail-item">
+                                <span className="detail-label">Major:</span>
+                                <span className="detail-value">{user.livingConditions?.major || 'Not specified'}</span>
+                              </div>
+                              <div className="detail-item">
+                                <span className="detail-label">Hobbies:</span>
+                                <span className="detail-value">{user.hobbies || 'Not specified'}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Carousel Controls */}
+                        <button className="carousel-control-prev" type="button" 
+                          data-bs-target={`#match-carousel-${user._id}`} data-bs-slide="prev">
+                          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Previous</span>
+                        </button>
+                        <button className="carousel-control-next" type="button" 
+                          data-bs-target={`#match-carousel-${user._id}`} data-bs-slide="next">
+                          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Next</span>
+                        </button>
+                      </div>
                     </div>
-                  ))
-                ) : (
-                  <p className="no-results">No matches yet.</p>
-                )}
-              </div>
-            ) : (
-              <div className="match-grid requests-grid">
-               {requests.length === 0 ? (
-            <p className="text-gray-500">No incoming requests.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl">
-              {requests.map(user => (
-                <div key={user._id} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-                  <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
-                    <img
-                      src={user.profilePic || 'https://via.placeholder.com/150'}
-                      alt={user.name}
-                      className="profile-page-pic"
-                    />
-                  </div>
-                  <h2 className="text-xl font-semibold mb-2">{user.name}</h2>
-                  {user.bio && <p className="text-gray-600 text-center mb-4">{user.bio}</p>}
-                  <div className="flex space-x-3">
-                    <button
-                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                      onClick={() => handleRespond(user._id, 'accept')}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                      onClick={() => handleRespond(user._id, 'decline')}
-                    >
-                      Decline
-                    </button>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <p className="no-results">No matches yet.</p>
+              )}
+            </div>
+          ) : (
+            <div className="requests-container">
+              {requests.length > 0 ? (
+                <div className="requests-grid">
+                  {requests.map(user => (
+                    <div className="request-card" key={user._id}>
+                      <div id={`request-carousel-${user._id}`} className="carousel slide">
+                        <div className="carousel-inner">
+                          {/* Profile View */}
+                          <div className="carousel-item active">
+                            <div className="profile-view">
+                              <div className="profile-header">
+                                <img
+                                  src={user.profilePic || defaultAvatar}
+                                  alt="Profile"
+                                  className="profile-image"
+                                />
+                                <div className="profile-info">
+                                  <h2 className="profile-name">{user.name}</h2>
+                                  {user.feed?.year && <p className="profile-year">Year: {user.feed.year}</p>}
+                                  {user.livingConditions?.major && (
+                                    <p className="profile-major">Major: {user.livingConditions.major}</p>
+                                  )}
+                                  {user.bio && <p className="profile-bio">{user.bio}</p>}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Details View */}
+                          <div className="carousel-item">
+                            <div className="details-view">
+                              <h3 className="detail-title">Living Preferences</h3>
+                              <div className="detail-item">
+                                <span className="detail-label">Sleep Schedule:</span>
+                                <span className="detail-value">{user.livingConditions?.sleep_attitude || 'Not specified'}</span>
+                              </div>
+                              <div className="detail-item">
+                                <span className="detail-label">Year:</span>
+                                <span className="detail-value">{user.feed?.year || 'Not specified'}</span>
+                              </div>
+                              <div className="detail-item">
+                                <span className="detail-label">Major:</span>
+                                <span className="detail-value">{user.livingConditions?.major || 'Not specified'}</span>
+                              </div>
+                              <div className="detail-item">
+                                <span className="detail-label">Hobbies:</span>
+                                <span className="detail-value">{user.hobbies || 'Not specified'}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Carousel Controls */}
+                        <button className="carousel-control-prev" type="button" 
+                          data-bs-target={`#request-carousel-${user._id}`} data-bs-slide="prev">
+                          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Previous</span>
+                        </button>
+                        <button className="carousel-control-next" type="button" 
+                          data-bs-target={`#request-carousel-${user._id}`} data-bs-slide="next">
+                          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Next</span>
+                        </button>
+                      </div>
+                      <div className="action-buttons">
+                        <button
+                          className="btn btn-reject"
+                          onClick={() => handleRespond(user._id, 'decline')}
+                        >
+                          Decline
+                        </button>
+                        <button
+                          className="btn btn-request"
+                          onClick={() => handleRespond(user._id, 'accept')}
+                        >
+                          Accept
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="no-results">No incoming requests.</p>
+              )}
             </div>
           )}
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>
-  );
-
+  </div>
+);
 };
 
 export default ProfilePage;

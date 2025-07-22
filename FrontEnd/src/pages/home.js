@@ -164,7 +164,7 @@ const Home = () => {
           {/* Action Buttons */}
           <div className="action-buttons">
             <button onClick={() => handleRemoveRec(rm._id)} className="btn btn-reject">
-              Reject
+              Not Interested
             </button>
             <button onClick={() => handleSendRequest(rm._id)} className="btn btn-request">
               Request Match
