@@ -223,6 +223,7 @@ const getRecommendations = async (req, res) => {
 const sendRequest = async (req, res) => {
     const fromId = req.user._id     // set by requireAuth
     const toId = req.params.id;
+    const io = req.app.get('io');
 
     if (fromId.equals(toId)) {
         return res.status(400).json({ error: "Can't request yourself" });
@@ -240,6 +241,19 @@ const sendRequest = async (req, res) => {
             $addToSet: { requestsReceived: { from: fromId } }
         }, { session });
 
+        // Get sender's profile to send to receiver
+        const sender = await User.findById(fromId).select('name profilePic bio');
+
+        // Notify the receiver in real-time
+        io.to(toId.toString()).emit('newMatchRequest', {
+            sender: {
+                _id: sender._id,
+                name: sender.name,
+                profilePic: sender.profilePic,
+                bio: sender.bio
+            }
+        });
+
         await session.commitTransaction();
         res.json({ success: true });
     } catch (err) {
@@ -256,6 +270,7 @@ const respondRequest = async (req, res) => {
     const meId = req.user._id;
     const fromId = req.params.id;
     const { action } = req.body; //'accept' or 'decline'
+    const io = req.app.get('io');
 
     if(!['accept','decline'].includes(action)) {
         return res.status(400).json({error: 'Invalid action'});
@@ -282,6 +297,12 @@ const respondRequest = async (req, res) => {
                 $addToSet: { matches: meId }
             }, { session });
         }
+
+        // Notify the original sender about the response
+        io.to(fromId.toString()).emit('matchRequestUpdate', {
+            userId: meId,
+            action: action
+        });
 
         await session.commitTransaction();
         res.json({ success: true });
@@ -312,7 +333,6 @@ const uploadProfilePic = async (req, res) => {
 };
 
 
-
 module.exports = {
     getUsers,
     getUser,
@@ -324,5 +344,5 @@ module.exports = {
     getRecommendations,
     sendRequest,
     respondRequest,
-    uploadProfilePic,
+    uploadProfilePic
 };

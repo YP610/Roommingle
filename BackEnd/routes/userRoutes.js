@@ -14,7 +14,7 @@ const {
     getUserInfoByCategory,
     getRecommendations,
     sendRequest,
-    respondRequest,
+    respondRequest
     
 } = require("../controllers/userController")
 const router = express.Router() //creates router
