@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './editprofile.css'; // ✅ make sure this CSS file exists
+import './editprofile.css';
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -8,7 +8,8 @@ const EditProfile = () => {
   const [preview, setPreview] = useState('');
   const [uploading, setUploading] = useState(false);
   const [user] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
-  const DEFAULT_AVATAR = 'https://res.cloudinary.com/<YOUR_CLOUD_NAME>/image/upload/v1234567890/roommingle_profiles/default_avatar.png';
+
+  const DEFAULT_AVATAR = 'https://res.cloudinary.com/demo/image/upload/v1234567890/roommingle_profiles/default_avatar.png';
 
   useEffect(() => {
     if (!user || !user._id) {
@@ -58,31 +59,32 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-8 bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg text-center">
-        <h1 className="text-2xl font-semibold mb-4">Edit Profile Picture</h1>
-        {preview && (
-          <img
-            src={preview}
-            alt="Preview"
-            className="profile-pic-preview"
-          />
-        )}
+    <div className="edit-profile-container">
+      <div className="edit-profile-card">
+        <h1 className="edit-profile-title">Edit Profile Picture</h1>
+
+        <img
+          src={preview}
+          alt="Preview"
+          className="profile-pic-preview"
+        />
+
+        <label htmlFor="fileUpload" className="file-label">Choose New Picture</label>
         <input
           type="file"
+          id="fileUpload"
           accept="image/*"
           onChange={handleFileChange}
-          className="mb-4"
+          className="file-input"
         />
-        <div>
-          <button
-            onClick={handleUpload}
-            disabled={uploading}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-          >
-            {uploading ? 'Uploading...' : 'Save'}
-          </button>
-        </div>
+
+        <button
+          onClick={handleUpload}
+          disabled={uploading}
+          className="upload-button"
+        >
+          {uploading ? 'Uploading...' : 'Save'}
+        </button>
       </div>
     </div>
   );
