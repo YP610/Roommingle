@@ -3,13 +3,14 @@ Contains functionality of all requests, so databaseRoutes simply has to call the
 */
 const path = require('path');
 
-const User=require('../models/userSchema')
+const User=require('../models/userSchema');
+const Chat = require('../models/chatSchema');
 const bcrypt = require('bcryptjs');
 const generateToken = require('../Utils/generateToken');
 const mongoose = require('mongoose')
 const algo=require('../Algorithm/sortingUsers');
-const getRec=require('../Algorithm/recs')
-const {calculateClean}=require('../Algorithm/sortingUsers')
+const getRec=require('../Algorithm/recs');
+const {calculateClean}=require('../Algorithm/sortingUsers');
 
 
 // get all users
@@ -332,6 +333,54 @@ const uploadProfilePic = async (req, res) => {
   }
 };
 
+const getOrCreateChat = async (req, res) => {
+    const { userId } = req.params;
+    const currentUserId = req.user._id;
+
+    try {
+        // Check if chat already exists
+        let chat = await Chat.findOne({
+            participants: { $all: [currentUserId, userId] }
+        }).populate('participants', 'name profilePic')
+          .populate('messages.from', 'name profilePic');
+        
+          if (!chat) {
+            // Create new chat
+            chat = await Chat.create({
+                participants: [currentUserId, userId],
+                messages: []
+            });
+
+            // Populate after creation
+            chat = await Chat.findById(chat._id)
+                .populate('participants', 'name profilePic');
+          }
+
+          res.status(200).json(chat)
+    } catch(err) {
+        console.error('Error getting chat:', err);
+        res.status(500).json({ error: 'Failed to get chat' });
+    }
+};
+
+const getUserChats = async (req, res) => {
+    const currentUserId = req.user._id;
+
+    try {
+        const chats = await Chat.find({
+            participants: currentUserId
+        })
+        .populate('participants', 'name profilePic')
+        .populate('messages.from', 'name profilePic')
+        .sort({ 'messages.timestamp': -1 });
+
+        res.status(200).json(chats || []);
+    } catch (err) {
+        console.error('Error getting user chats:', err);
+        res.status(500).json({ error: 'Failed to get chats' });
+    }
+};
+
 
 module.exports = {
     getUsers,
@@ -344,5 +393,7 @@ module.exports = {
     getRecommendations,
     sendRequest,
     respondRequest,
-    uploadProfilePic
+    uploadProfilePic,
+    getOrCreateChat,
+    getUserChats
 };

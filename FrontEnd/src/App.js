@@ -6,6 +6,7 @@ import Home from './pages/home';
 import ProfilePage from './pages/profile';
 import EditProfile from './pages/editprofile';
 import NotificationsPage from './pages/notifications';
+import ChatPage from './pages/chatpage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/chat/:userId" element={<ChatPage />} />
       </Routes>
       
     </div>

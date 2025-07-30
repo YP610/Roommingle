@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 //requires API routes
 const authRoutes = require('./routes/authRoutes');
 const connectDB=require('./db');
+const Chat = require('./models/chatSchema');
 
 //express app
 const app = express();
@@ -50,6 +51,67 @@ io.on('connection', (socket) => {
             userId: data.senderId,
             action: data.action
         });
+    });
+
+    socket.on('sendMessage', async ({ chatId, fromUserId, text }) => {
+        try {
+            // Save message to database
+            const chat = await Chat.findByIdAndUpdate(
+                chatId,
+                {
+                    $push: {
+                        messages: {
+                            from: fromUserId,
+                            text: text
+                        }
+                    }
+                },
+                { new: true }
+            ).populate('messages.from', 'name profilePic');
+
+            if (!chat) {
+                throw new Error('Chat not found');
+            }
+
+            // Get the other participant
+            const toUserId = chat.participants.find(
+                participant => !participant.equals(fromUserId)
+            );
+
+            // Emit the new message to the recipient
+            const newMessage = chat.messages[chat.messages.length-1];
+            io.to(toUserId.toString()).emit('newMessage', {
+                chatId,
+                message: {
+                    _id: newMessage._id,
+                    from: {
+                        _id: newMessage.from._id,
+                        name: newMessage.from.name,
+                        profilePic: newMessage.from.profilePic
+                    },
+                    text: newMessage.text,
+                    timestamp: newMessage.timestamp
+                }
+            });
+
+            // Also send back to sender for immediate UI update
+            socket.emit('newMessage', {
+                chatId,
+                message: {
+                    _id: newMessage._id,
+                    from: {
+                        _id: newMessage.from._id,
+                        name: newMessage.from.name,
+                        profilePic: newMessage.from.profilePic
+                    },
+                    text: newMessage.text,
+                    timestamp: newMessage.timestamp
+                }
+            });
+        } catch (err) {
+            console.error('Error sending message:', err);
+            socket.emit('messageError', { error: 'Failed to send message'});
+        }
     });
 
     // Handle disconnections

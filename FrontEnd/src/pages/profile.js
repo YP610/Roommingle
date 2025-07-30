@@ -208,6 +208,11 @@ return (
                               {user.number ? <p>Phone: {user.number}</p> : ''}
                               {user.contact.insta ? <p>Instagram: {user.contact.insta}</p> : ''}
                               {user.contact.snap ? <p>Snapchat: {user.contact.snap}</p> : ''}
+                              <button
+                              className='btn btn-primary mt-2'
+                              onClick={() => navigate(`/chat/${user._id}`)}
+                              >Message
+                              </button>
                             </div>
                           </div>
                           

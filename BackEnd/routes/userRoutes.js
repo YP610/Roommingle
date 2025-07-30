@@ -1,6 +1,5 @@
 const multer = require('multer');
 const path = require('path');
-const { uploadProfilePic } = require("../controllers/userController");
 const { storage } = require('../config/cloudinary'); 
 const upload = multer({ storage });
 
@@ -14,7 +13,11 @@ const {
     getUserInfoByCategory,
     getRecommendations,
     sendRequest,
-    respondRequest
+    respondRequest,
+    uploadProfilePic,
+    getUserChats,
+    getOrCreateChat
+
     
 } = require("../controllers/userController")
 const router = express.Router() //creates router
@@ -51,6 +54,10 @@ router.post(
   upload.single('profilePic'),
   uploadProfilePic
 );
+
+router.get('/chats', requireAuth, getUserChats);
+
+router.get('/chat/:userId', requireAuth, getOrCreateChat);
 
 //exports router to server.js
 module.exports = router
