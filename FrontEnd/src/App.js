@@ -7,6 +7,7 @@ import ProfilePage from './pages/profile';
 import EditProfile from './pages/editprofile';
 import NotificationsPage from './pages/notifications';
 import ChatPage from './pages/chatpage';
+import SidebarMenu from './components/sidebarMenu';
 
 function App() {
   return (

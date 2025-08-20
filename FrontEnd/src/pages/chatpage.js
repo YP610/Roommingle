@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import socket from '../api/socket';
 import { defaultAvatar } from '../config';
+import SidebarMenu from '../components/sidebarMenu';
 
 export default function ChatPage() {
+    const [profile, setProfile] = useState()
+    const [sidebarOpen, setSidebarOpen] = useState(false)
+    const toggleMenu = () => setSidebarOpen(!sidebarOpen)
     const [chat, setChat] = useState(null);
     const [message, setMessage] = useState('');
     const [chats, setChats] = useState([]);
@@ -15,6 +19,19 @@ export default function ChatPage() {
 
     // Fetch chat or create new one
     useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        fetch(`http://localhost:1000/api/userRoutes/${userId}`, {
+            headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to load profile');
+            return res.json();
+        })
+        .then(async profile => {
+            setProfile(profile);
+        })
+
         const fetchChat = async () => {
             try {
                 const token = localStorage.getItem('token');
@@ -101,6 +118,12 @@ export default function ChatPage() {
 
     return (
         <div className="chat-container">
+            <SidebarMenu 
+                profile={profile}
+                sidebarOpen={sidebarOpen}
+                onToggle={toggleMenu}
+            />
+        
             {/* Chat list sidebar */}
             <div className="chat-list">
                 <h3>Your Chats</h3>

@@ -291,11 +291,35 @@
 }
 
 .carousel .profile-image {
-  width: 140px;
-  height: 140px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #f8f9fa;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-right: 15px; /* Add some spacing */
+}
+
+/* Let names wrap inside match/request cards */
+.match-card .profile-name,
+.request-card .profile-name {
+  white-space: normal;       /* allow wrapping */
+  overflow: visible;         /* don't clip */
+  text-overflow: clip;       /* no ellipsis */
+  line-height: 1.2;
+  word-break: break-word;    /* handle very long tokens/handles */
+  display: -webkit-box;      /* optional: limit to 2 lines */
+  -webkit-line-clamp: 2;     /* ↑ comment out if you want unlimited lines */
+  -webkit-box-orient: vertical;
+  max-width: 100%;
+}
+
+/* Ensure the text area can actually shrink/wrap next to the avatar */
+.profile-view .profile-header { 
+  min-width: 0;              /* fix flexbox overflow */
+}
+
+.profile-view .profile-info {
+  min-width: 0;              /* allow .profile-name to wrap */
+  flex: 1;
 }

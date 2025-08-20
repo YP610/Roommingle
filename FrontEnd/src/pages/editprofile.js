@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './editprofile.css';
+import SidebarMenu from '../components/sidebarMenu';
 
 const EditProfile = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toggleMenu = () => setSidebarOpen(!sidebarOpen);
   const navigate = useNavigate();
   const [profilePic, setProfilePic] = useState(null);
   const [preview, setPreview] = useState('');
@@ -60,6 +63,11 @@ const EditProfile = () => {
 
   return (
     <div className="edit-profile-container">
+      <SidebarMenu 
+        profile={user}
+        sidebarOpen={sidebarOpen}
+        onToggle={toggleMenu}
+      />
       <div className="edit-profile-card">
         <h1 className="edit-profile-title">Edit Profile Picture</h1>
 

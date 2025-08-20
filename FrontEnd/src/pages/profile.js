@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './profilecss.css'; // Ensure this CSS file exists and is imported
 import { defaultAvatar } from "../config"; // adjust path if needed
+import SidebarMenu from '../components/sidebarMenu';
 
 
 const ProfilePage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleMenu = () => setSidebarOpen(open => !open);
   const navigate = useNavigate();
-  const [profile, setProfile] = useState(null);
+  const [user, setUser] = useState({});
+  const [token, setToken] = useState('');
   const [matches, setMatches] = useState([]);
   const [requests, setRequests] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
@@ -18,13 +20,18 @@ const ProfilePage = () => {
 
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const stored = JSON.parse(localStorage.getItem('user') || '{}');
-    const userId = stored._id;
-    if (!token || !userId) {
+    // Get data once on component mount
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const userToken = localStorage.getItem('token');
+    const userId = userData._id;
+
+    if (!userToken || !userId) {
       navigate('/signup');
       return;
     }
+
+    setUser(userData);
+    setToken(userToken);
 
     // Fetch user profile (includes accepted matches array)
     fetch(`http://localhost:1000/api/userRoutes/${userId}`, {
@@ -35,10 +42,10 @@ const ProfilePage = () => {
         return res.json();
       })
       .then(async profile => {
-        setProfile(profile);
+        setUser(profile);
 
         // Fetch each accepted match's details
-        const acceptedIds = profile.matches || [];
+        const acceptedIds = user.matches || [];
 
         const matchPromises = acceptedIds.map(id =>
           fetch(`http://localhost:1000/api/userRoutes/${id}`, {
@@ -53,7 +60,7 @@ const ProfilePage = () => {
         setMatches(matchUsers);
 
         // Fetch requests
-        const requestedIds = (profile.requestsReceived || []).map(r => r.from);
+        const requestedIds = (user.requestsReceived || []).map(r => r.from);
 
         const requestPromises = requestedIds.map(id =>
           fetch(`http://localhost:1000/api/userRoutes/${id}`, {
@@ -78,7 +85,7 @@ const ProfilePage = () => {
       </div>
     );
   }
-  if (!profile) {
+  if (!user) {
     return (
       <div className="profile-page-container">
         <p>Loading profile...</p>
@@ -90,7 +97,6 @@ const ProfilePage = () => {
   const handleRespond = async (userId, action) => {
     setError('');
     try {
-      const token = localStorage.getItem('token');
       const res = await fetch(`http://localhost:1000/api/userRoutes/${userId}/respond`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -108,36 +114,34 @@ const ProfilePage = () => {
     }
   };
 
+  const handleRemove = async (userId) => {
+    setError('')
+    try {
+      const res = await fetch(`http://localhost:1000/api/userRoutes/${userId}/remove`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`},
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Removal failed');
+      }
+
+      setMatches(prev => prev.filter(u => u._id !==userId));
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
+
+
 return (
   <div className="home-wrapper">
-    {/* Menu Button */}
-    <button className="menu-button" onClick={toggleMenu}>☰</button>
-
-    {/* Sidebar */}
-    <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`}>
-      <div className="sidebar-logo">ROOMMINGLE</div>
-      <div className="sidebar-content">
-        <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
-          <img
-            src={profile.profilePic || defaultAvatar}
-            alt="Profile"
-            className="profile-pic"
-          />
-        </div>
-        <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
-        <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
-        <button className="sidebar-link" onClick={() => navigate('/notifications')}>Notifications</button>
-        <button
-          className="sidebar-link"
-          onClick={() => {
-            localStorage.clear();
-            navigate('/');
-          }}
-        >
-          Log Out
-        </button>
-      </div>
-    </div>
+    <SidebarMenu
+      profile={user}
+      sidebarOpen={sidebarOpen}
+      onToggle={toggleMenu}
+    />
 
     {/* Main Content */}
     <div className="feed-container">
@@ -145,13 +149,13 @@ return (
         {/* Profile Header */}
         <div className="profile-header">
           <img
-            src={profile.profilePic || defaultAvatar}
-            alt={profile.name}
+            src={user.profilePic || defaultAvatar}
+            alt={user.name}
             className="profile-picture"
           />
           <div className="profile-info">
-            <h1 className="profile-name">{profile.name}</h1>
-            <p className="profile-bio">{profile.bio || ''}</p>
+            <h1 className="profile-name">{user.name}</h1>
+            <p className="profile-bio">{user.bio || ''}</p>
             <button
               className="edit-button"
               onClick={() => navigate('/edit-profile')}
@@ -209,9 +213,15 @@ return (
                               {user.contact.insta ? <p>Instagram: {user.contact.insta}</p> : ''}
                               {user.contact.snap ? <p>Snapchat: {user.contact.snap}</p> : ''}
                               <button
-                              className='btn btn-primary mt-2'
+                              className='btn btn-primary'
                               onClick={() => navigate(`/chat/${user._id}`)}
                               >Message
+                              </button>
+                              <button
+                              className='btn btn-reject'
+                              onClick={() => handleRemove(user._id)}
+                              >
+                                Remove
                               </button>
                             </div>
                           </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { defaultAvatar } from '../config';
 import socket from '../api/socket';
+import SidebarMenu from '../components/sidebarMenu';
 
 export default function NotificationsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -134,33 +135,11 @@ export default function NotificationsPage() {
 
   return (
     <div className="home-wrapper">
-      {/* Menu Button */}
-      <button className="menu-button" onClick={toggleMenu}>☰</button>
-
-      {/* Sidebar */}
-      <div className={`sidebar-overlay${sidebarOpen ? ' open' : ''}`}>  
-        <div className="sidebar-logo">ROOMMINGLE</div>
-        <div className="sidebar-content">
-          <img
-            src={profile?.profilePic || defaultAvatar}
-            alt="Profile"
-            className="profile-pic"
-          />
-          <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
-          <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
-          <button className="sidebar-link" onClick={() => navigate('/notifications')}>Notifications</button>
-          <button 
-            className="sidebar-link" 
-            onClick={() => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              navigate('/');
-            }}
-          >
-            Log Out
-          </button>
-        </div>
-      </div>
+      <SidebarMenu 
+        profile={profile}
+        sidebarOpen={sidebarOpen}
+        onToggle={toggleMenu}
+      />
 
       {/* Main Content */}
       <div className="feed-container">

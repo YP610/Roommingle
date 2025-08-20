@@ -316,6 +316,32 @@ const respondRequest = async (req, res) => {
     }
 };
 
+const removeMatch = async (req, res) => {
+    const meId = req.user._id;
+    const matchId = req.params.id;
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        await User.findByIdAndUpdate(meId, {
+            $pull: { matches: matchId }
+        }, { session });
+
+        await User.findByIdAndUpdate(matchId, {
+            $pull: { matches: meId }
+        }, { session });
+        
+        await session.commitTransaction();
+        res.json({ success: true });
+    } catch (err) {
+        await session.abortTransaction();
+        console.error(err);
+        res.status(500).json({ error: 'Failed to remove match'});
+    } finally {
+        session.endSession();
+    }
+};
+
 const uploadProfilePic = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -393,6 +419,7 @@ module.exports = {
     getRecommendations,
     sendRequest,
     respondRequest,
+    removeMatch,
     uploadProfilePic,
     getOrCreateChat,
     getUserChats

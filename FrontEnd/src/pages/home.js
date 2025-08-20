@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import './home.css';
 import { sendMatchRequest } from '../api/users';
 import { defaultAvatar } from "../config";
+import SidebarMenu from '../components/sidebarMenu';
 
 const Home = () => {
   const [profile, setProfile] = useState(null);
   const [roommates, setRoommates] = useState([]);
   const [error, setError] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toggleMenu = () => setSidebarOpen(open => !open);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,36 +66,15 @@ const Home = () => {
     }
   };
 
-  const toggleMenu = () => setSidebarOpen(o => !o);
-
   if (!profile) return <p>Loading profile...</p>;
 
   return (
   <div className="container-fluid home-container">
-    {/* Menu Button */}
-    <button className="menu-button" onClick={toggleMenu}>☰</button>
-
-    {/* Sidebar Overlay */}
-    <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`} id="sidebar">
-      <div className="sidebar-logo">ROOMMINGLE</div>
-      <div className="sidebar-content">
-        <img
-          src={profile.profilePic || defaultAvatar}
-          alt="Profile"
-          className="profile-pic"
-        />
-        <button className="sidebar-link" onClick={() => navigate('/home')}>Home</button>
-        <button className="sidebar-link" onClick={() => navigate('/profile')}>Profile</button>
-        <button className="sidebar-link" onClick={() => navigate('/notifications')}>Notifications</button>
-        <button className="sidebar-link" onClick={() => {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          navigate('/');
-        }}>
-          Log Out
-        </button>
-      </div>
-    </div>
+    <SidebarMenu 
+      profile={profile}
+      sidebarOpen={sidebarOpen}
+      onToggle={toggleMenu}
+    />
 
     {/* Feed Container */}
     <div className="feed-container">

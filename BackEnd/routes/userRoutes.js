@@ -14,6 +14,7 @@ const {
     getRecommendations,
     sendRequest,
     respondRequest,
+    removeMatch,
     uploadProfilePic,
     getUserChats,
     getOrCreateChat
@@ -45,6 +46,9 @@ router.post('/:id/request', requireAuth, sendRequest);
 
 // respond on a request FROM user :id
 router.post('/:id/respond', requireAuth, respondRequest);
+
+// remove a match FROM user :id
+router.post('/:id/remove', requireAuth, removeMatch);
 
 // Upload a profile picture
 // Upload profile picture
