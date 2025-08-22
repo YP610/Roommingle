@@ -38,6 +38,16 @@ const getUser = async (req, res) => {
     res.status(200).json(user)
 }
 
+const checkEmailExists = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const userExists = await User.findOne({ email });
+        res.status(200).json({ exists: !!userExists });
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' })
+    }
+};
+
 const registerUser = async (req, res) => {
     console.log("📥 Incoming body:", JSON.stringify(req.body, null, 2));
 
@@ -411,6 +421,7 @@ const getUserChats = async (req, res) => {
 module.exports = {
     getUsers,
     getUser,
+    checkEmailExists,
     registerUser,
     loginUser,
     deleteUser,

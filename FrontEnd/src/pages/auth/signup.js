@@ -7,18 +7,52 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [isChecking, setIsChecking] = useState(false);
     const navigate = useNavigate();
 
 
+    const checkEmailAvailability = async () => {
+      setIsChecking(true);
+      try {
+        const response = await fetch('http://localhost:1000/api/userRoutes/check-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email })
+        });
 
-    const handleSignUp = async () => {
+        const data = await response.json();
+         if (data.exists) {
+          setError('Email already exists. Please use a different email.');
+          return false;
+         }
+         return true
+      } catch (err) {
+        setError('Error checking email availability. Please try again.')
+        return false;
+      } finally {
+        setIsChecking(false);
+      }
+    };
+
+
+    const handleSignUp = async (e) => {
+      e.preventDefault();
         setError('');
+
+        if (!email || !password || !confirmPassword) {
+          setError('Please fill in all fields');
+          return;
+        }
 
         if (password !== confirmPassword) {
             setError("Passwords don't match.");
-
             return;
         }
+
+        const isEmailAvailable = await checkEmailAvailability();
+        if (!isEmailAvailable) return;
         navigate('/survey', { state: { email, password } });
     };
 

@@ -35,7 +35,7 @@ const ProfilePage = () => {
 
     // Fetch user profile (includes accepted matches array)
     fetch(`http://localhost:1000/api/userRoutes/${userId}`, {
-      headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
+      headers: { Accept: 'application/json', Authorization: `Bearer ${userToken}` }
     })
       .then(res => {
         if (!res.ok) throw new Error('Failed to load profile');
@@ -45,11 +45,11 @@ const ProfilePage = () => {
         setUser(profile);
 
         // Fetch each accepted match's details
-        const acceptedIds = user.matches || [];
+        const acceptedIds = profile.matches || [];
 
         const matchPromises = acceptedIds.map(id =>
           fetch(`http://localhost:1000/api/userRoutes/${id}`, {
-            headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
+            headers: { Accept: 'application/json', Authorization: `Bearer ${userToken}` }
           })
             .then(res => {
               if (!res.ok) throw new Error('Failed to load match');
