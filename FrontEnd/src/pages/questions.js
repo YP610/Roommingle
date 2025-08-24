@@ -1,6 +1,3 @@
-import { useState } from 'react';
-
-
 const questions = [
     {
     id: 'name',
@@ -62,7 +59,8 @@ const questions = [
             { label: "North Apartments", value: 'No'},
             { label: "Southwest", value: 'SW'},
             { label: "Sylvan", value: 'Sy'}
-        ]
+        ],
+        condition: (answers) => !answers.is_honors
     },
     {
         id: 'dorm2',
@@ -74,7 +72,8 @@ const questions = [
             { label: "North Apartments", value: 'No'},
             { label: "Southwest", value: 'SW'},
             { label: "Sylvan", value: 'Sy'}
-        ]
+        ],
+        condition: (answers) => !answers.is_honors
     },
     {
         id: 'dorm3',
@@ -86,7 +85,8 @@ const questions = [
             { label: "North Apartments", value: 'No'},
             { label: "Southwest", value: 'SW'},
             { label: "Sylvan", value: 'Sy'}
-        ]
+        ],
+        condition: (answers) => !answers.is_honors
     },
     //Cleanliness Questions:
     {

@@ -34,9 +34,20 @@ const UserSchema = new Schema({
         is_honors: { type: Boolean, required: true },
         rank: {
             type: [String],
-            validate: [array => array.length <= 3, 'Cannot select more than 3 preferences'],
+            validate: {
+                validator: function(array) {
+                    // For honors students, rank can be empty
+                    if (this.feed.is_honors) return true;
+                    // For non-honors, validate as before
+                    return array.length <= 3;
+                },
+                message: 'Cannot select more than 3 preferences'
+            },
             enum: ["CHC", "SW", "OH", "NE", "No", "CE", "Sy"],
-            required: true
+            required: function() {
+                // Only required for non-honors students
+                return !this.feed.is_honors;
+            }
           }
     },
     

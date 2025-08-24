@@ -17,40 +17,24 @@ function getGroupKey(user){
 
     let groupKey;
 
-
-    if(!honors){
-        if(grade=="Sophomore" || grade=="Junior" || grade=="Senior"){
-            if(gender==="male"){
-                groupKey="maleNF";
-            }
-            else{
-                groupKey="femaleNF";
-            }
+    if (honors) {
+        if (grade === "Sophomore" || grade === "Junior" || grade === "Senior") {
+            groupKey = gender === "male" ? "H_maleNF" : "H_femaleNF";
+        } else {
+            groupKey = gender === "male" ? "H_maleFreshman" : "H_femaleFreshman";
         }
-        else if(gender==="male"){
-            groupKey="maleFreshman";
-        }
-        else{
-            groupKey="femaleFreshman";
+    } else {
+        if (grade === "Sophomore" || grade === "Junior" || grade === "Senior") {
+            groupKey = gender === "male" ? "maleNF" : "femaleNF";
+        } else {
+            groupKey = gender === "male" ? "maleFreshman" : "femaleFreshman";
         }
     }
-    else if(grade=="Sophomore" || grade=="Junior" || grade=="Senior"){
-        if(gender==="male"){
-            groupKey="H_maleNF";
-        }
-        else{
-            groupKey="H_femaleNF";
-        }
-    }
-    else if(gender==="male"){
-        groupKey="H_maleFreshman";
-    }
-    else{
-        groupKey="H_femaleFreshman";
-    }
-    console.log(`Assigned user to group: ${groupKey}`)
+    
+    console.log(`Assigned user to group: ${groupKey}`);
     return groupKey;
 }
+
 function addUser(user){
     const groupKey=getGroupKey(user);
     console.log(`Assigned user to group: ${groupKey}`);
