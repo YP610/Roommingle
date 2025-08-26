@@ -106,7 +106,7 @@ const Home = () => {
               {/* Details View */}
               <div className="carousel-item">
                 <div className="details-view">
-                  <h3 className="detail-title">Living Preferences</h3>
+                  <h3 className="detail-title">More Information</h3>
                   <div className="detail-item">
                     <span className="detail-label">Sleep Schedule:</span>
                     <span className="detail-value">{rm.livingConditions.sleep_attitude || 'Not specified'}</span>

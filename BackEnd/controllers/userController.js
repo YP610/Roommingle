@@ -355,7 +355,17 @@ const removeMatch = async (req, res) => {
 const uploadProfilePic = async (req, res) => {
   try {
     const userId = req.user._id;
-    const profilePicUrl = req.file.path; // Cloudinary returns public URL in path
+
+    let profilePicUrl = null;
+    if (req.file && req.file.path) {
+      profilePicUrl = req.file.path;                 // multipart upload
+    } else if (req.body && req.body.profilePic) {
+      profilePicUrl = req.body.profilePic;           // JSON reset or custom URL
+    }
+
+    if (!profilePicUrl) {
+      return res.status(400).json({ message: 'No image uploaded or URL provided' });
+    }
 
     const user = await User.findByIdAndUpdate(
       userId,
@@ -368,6 +378,7 @@ const uploadProfilePic = async (req, res) => {
     res.status(500).json({ message: 'Error uploading profile picture' });
   }
 };
+
 
 const getOrCreateChat = async (req, res) => {
     const { userId } = req.params;

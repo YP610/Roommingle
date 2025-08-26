@@ -53,7 +53,6 @@ router.post('/:id/respond', requireAuth, respondRequest);
 // remove a match FROM user :id
 router.post('/:id/remove', requireAuth, removeMatch);
 
-// Upload a profile picture
 // Upload profile picture
 router.post(
   '/upload-profile-pic',

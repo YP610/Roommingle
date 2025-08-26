@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './editprofile.css';
 import SidebarMenu from '../components/sidebarMenu';
+import { defaultAvatar } from '../config';
 
 const EditProfile = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -12,7 +13,7 @@ const EditProfile = () => {
   const [uploading, setUploading] = useState(false);
   const [user] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
 
-  const DEFAULT_AVATAR = 'https://res.cloudinary.com/demo/image/upload/v1234567890/roommingle_profiles/default_avatar.png';
+  const DEFAULT_AVATAR = defaultAvatar;
 
   useEffect(() => {
     if (!user || !user._id) {
@@ -61,6 +62,34 @@ const EditProfile = () => {
     }
   };
 
+  const handleResetToDefault = async () => {
+    setUploading(true);
+
+    try {
+      const res = await fetch('http://localhost:1000/api/userRoutes/upload-profile-pic', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ profilePic: DEFAULT_AVATAR }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('user', JSON.stringify({ ...user, profilePic: DEFAULT_AVATAR }));
+        alert('Profile picture reset to default.');
+        navigate('/profile');
+      } else {
+        alert(data.message || 'Reset failed.');
+      }
+    } catch (err) {
+      alert('Error resetting image.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="edit-profile-container">
       <SidebarMenu 
@@ -92,6 +121,20 @@ const EditProfile = () => {
           className="upload-button"
         >
           {uploading ? 'Uploading...' : 'Save'}
+        </button>
+
+        <button
+          onClick={handleResetToDefault}
+          className='reset-button'
+        >
+          Reset to Default
+        </button>
+
+        <button
+          onClick={() => navigate('/profile')}
+          className='cancel-button'
+        >
+          Cancel
         </button>
       </div>
     </div>

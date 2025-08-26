@@ -60,3 +60,23 @@
   background-color: #93c5fd;
   cursor: not-allowed;
 }
+
+.reset-button,
+.cancel-button {
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.reset-button {
+  background-color: #f0ad4e;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #d9534f;
+  color: white;
+}
+

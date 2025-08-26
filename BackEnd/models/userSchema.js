@@ -13,7 +13,7 @@ const UserSchema = new Schema({
     password: { type: String, required: true },
     number: { type: String, required: false },
     bio: {type:String, required: false, maxlength:250},
-    profilePic: { type: String, default: 'https://res.cloudinary.com/<YOUR_CLOUD_NAME>/image/upload/v1234567890/roommingle_profiles/default_avatar.png'},
+    profilePic: { type: String, default: 'https://res.cloudinary.com/dja9qnoxi/image/upload/v1752198718/default_avatar_c7hmj1_g65cto.jpg'},
     prof_questions:{
         q1: { type: Number, enum: [2, 1, 0, -1, -2], required: true},
         q2: { type: Number, enum: [2, 1, 0, -1, -2], required: true},
