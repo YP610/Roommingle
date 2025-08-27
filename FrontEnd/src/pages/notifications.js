@@ -101,7 +101,7 @@ export default function NotificationsPage() {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(
-            `http://localhost:8080/api/userRoutes/${userId}/respond`,
+            `http://localhost:1000/api/userRoutes/${userId}/respond`,
             {
                 method: 'POST',
                 headers: { 
@@ -198,13 +198,13 @@ export default function NotificationsPage() {
                   {/* Action Buttons */}
                   <div className="flex space-x-3">
                     <button
-                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                      className="btn btn-request"
                       onClick={() => handleRespond(user._id, 'accept')}
                     >
                       Accept
                     </button>
                     <button
-                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                      className="btn btn-reject"
                       onClick={() => handleRespond(user._id, 'decline')}
                     >
                       Decline

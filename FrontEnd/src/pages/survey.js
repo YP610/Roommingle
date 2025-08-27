@@ -96,6 +96,12 @@ export default function Survey() {
     }
   }, [answers.is_honors, step, questionGroups]);
 
+  const validateDormUniqueness = (a) => {
+    const picks = [a.dorm1, a.dorm2, a.dorm3].filter(Boolean);
+    const unique = new Set(picks);
+    return unique.size === picks.length;
+  };
+
   const handleAnswer = (id, val) => {
     if (id === 'is_honors') {
       // If switching to honors, clear dorm answers
@@ -107,12 +113,19 @@ export default function Survey() {
           dorm2: '',
           dorm3: ''
         }));
+        setError('');
       } else {
         setAnswers(prev => ({ ...prev, [id]: val }));
       }
-    } else {
-      setAnswers(prev => ({ ...prev, [id]: val }));
+      return;
     }
+
+    if (id==='dorm1' || id==='dorm2' || id==='dorm3') {
+      setAnswers(prev => ({ ...prev, [id]: val }));
+      setError('');
+      return;
+    }
+    setAnswers(prev => ({ ...prev, [id]: val }));
   };
 
   // Proceed to next page after validating current group
@@ -125,6 +138,14 @@ export default function Survey() {
     if (!allAnswered) {
       setError('Please answer all required questions before proceeding.');
       return;
+    }
+
+    const hasDorms = group.some(q => ['dorm1', 'dorm2', 'dorm3'].includes(q.id));
+    if (hasDorms && !answers.is_honors) {
+      if (!validateDormUniqueness(answers)) {
+        setError('Each dorm preference must be different. Please choose a different dorm for each preference.');
+        return;
+      }
     }
     setError('');
     setStep(s => s + 1);
@@ -139,6 +160,13 @@ export default function Survey() {
   const handleSubmit = async () => {
     setError('');
     setSuccess('');
+
+    if (!answers.is_honors) {
+      if (!validateDormUniqueness(answers)) {
+        setError('Each dorm preference must be different. Please choose a different dorm for each preference.');
+        return;
+      }
+    }
 
     // Validate all required answers from filtered questions
     const allRequired = filteredQuestions
